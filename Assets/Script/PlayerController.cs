@@ -13,13 +13,14 @@ public class PlayerController : MonoBehaviour
     [Header("Gravity Settings")]
     public float gravityMultiplier = 2f;
     public float baseGravity = -9.81f;
-    public float gravityCooldown = 0.5f; // 反重力冷却时间
+    public float gravityCooldown = 0.5f;
     private Vector3 currentGravity;
     private bool isGravityNormal = true;
     private float lastGravityFlipTime;
 
     // 颜色系统
     [Header("Color Settings")]
+    public Renderer targetRenderer;
     public Material blackMat;
     public Material whiteMat;
     [HideInInspector] public bool isBlack = true;
@@ -36,7 +37,6 @@ public class PlayerController : MonoBehaviour
 
     // 组件引用
     private Rigidbody rb;
-    private Renderer rend;
     private Collider col;
     private Animator anim;
 
@@ -57,11 +57,15 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rend = GetComponent<Renderer>();
         col = GetComponent<Collider>();
         anim = GetComponent<Animator>();
 
-        // 初始化动画参数哈希
+        if (targetRenderer == null)
+        {
+            Transform chest = transform.Find("Mesh/Body/Chest");
+            if (chest != null) targetRenderer = chest.GetComponent<Renderer>();
+        }
+
         speedHash = Animator.StringToHash("Speed");
         verticalSpeedHash = Animator.StringToHash("VerticalSpeed");
         isGroundedHash = Animator.StringToHash("IsGrounded");
@@ -72,28 +76,24 @@ public class PlayerController : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         currentGravity = new Vector3(0, baseGravity, 0);
 
-        // 设置无摩擦物理材质
         PhysicMaterial mat = new PhysicMaterial();
         mat.dynamicFriction = 0;
         mat.staticFriction = 0;
         col.material = mat;
+
+        UpdateColorMaterial();
     }
 
     void Update()
     {
-        // 更新动作锁状态
         UpdateActionLockStatus();
-
-        // 更新跳跃状态
         isInJumpState = anim.GetCurrentAnimatorStateInfo(0).IsName(jumpUpState) ||
                        anim.GetCurrentAnimatorStateInfo(0).IsName(fallState);
 
         HandleInput();
-
         HandleEdgeStuck();
         UpdateAnimationParameters();
 
-        // 实时检测是否需要硬着陆
         shouldHardLand = rb.velocity.y < hardLandingSpeedThreshold;
         anim.SetBool(hardLandingHash, shouldHardLand);
     }
@@ -123,7 +123,6 @@ public class PlayerController : MonoBehaviour
 
     void HandleInput()
     {
-        // 跳跃
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isActionLocked)
         {
             float direction = isGravityNormal ? 1f : -1f;
@@ -131,13 +130,11 @@ public class PlayerController : MonoBehaviour
             anim.SetTrigger(jumpTriggerHash);
         }
 
-        // 反重力（仅在跳跃状态可用+冷却检查）
         if (Input.GetKeyDown(KeyCode.LeftShift) && isInJumpState)
         {
             ReverseGravity();
         }
 
-        // 颜色切换
         if (Input.GetKeyDown(KeyCode.C))
         {
             ToggleColor();
@@ -146,15 +143,23 @@ public class PlayerController : MonoBehaviour
 
     void ReverseGravity()
     {
-        // 冷却时间检查
         if (Time.time - lastGravityFlipTime < gravityCooldown) return;
 
-        // 执行反重力
+        // 获取角色顶部位置
+        Vector3 topPosition = transform.position + (isGravityNormal ? Vector3.up * col.bounds.extents.y : Vector3.down * col.bounds.extents.y);
+
+        // 翻转重力方向
         isGravityNormal = !isGravityNormal;
         currentGravity.y = isGravityNormal ? baseGravity : -baseGravity;
+
+        // 旋转角色
         transform.Rotate(180f, 0f, 0f);
 
-        // 安全修改速度（防止连续反转导致速度失控）
+        // 调整角色位置，使顶部位置保持不变
+        Vector3 newTopPosition = transform.position + (isGravityNormal ? Vector3.up * col.bounds.extents.y : Vector3.down * col.bounds.extents.y);
+        transform.position += topPosition - newTopPosition;
+
+        // 调整垂直速度，避免翻转后速度过大
         float newYVelocity = Mathf.Clamp(-rb.velocity.y * 0.7f, -jumpForce * 1.2f, jumpForce * 1.2f);
         rb.velocity = new Vector3(rb.velocity.x, newYVelocity, rb.velocity.z);
 
@@ -201,11 +206,26 @@ public class PlayerController : MonoBehaviour
     void ToggleColor()
     {
         isBlack = !isBlack;
-        rend.material = isBlack ? blackMat : whiteMat;
+        UpdateColorMaterial();
+    }
+
+    void UpdateColorMaterial()
+    {
+        if (targetRenderer != null)
+        {
+            targetRenderer.material = isBlack ? blackMat : whiteMat;
+        }
+        else
+        {
+            Debug.LogWarning("目标渲染器未赋值！");
+        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
+        // 立即检测错误颜色碰撞
+        CheckFailureCollision(collision.gameObject);
+
         bool wasGrounded = isGrounded;
         CheckGroundStatus(collision, true);
 
@@ -225,22 +245,51 @@ public class PlayerController : MonoBehaviour
         CheckGroundStatus(collision, false);
     }
 
+    void CheckFailureCollision(GameObject other)
+    {
+        if (other.CompareTag("BlackBlock") && !isBlack)
+        {
+            TriggerFailure();
+        }
+        else if (other.CompareTag("WhiteBlock") && isBlack)
+        {
+            TriggerFailure();
+        }
+    }
+
     void CheckGroundStatus(Collision collision, bool enteringOrStaying)
     {
         if (collision.gameObject.CompareTag("DeathZone")) return;
 
         bool isValidPlatform = false;
-        if (collision.gameObject.CompareTag("BlackBlock") && isBlack) isValidPlatform = true;
-        if (collision.gameObject.CompareTag("WhiteBlock") && !isBlack) isValidPlatform = true;
 
-        if (isValidPlatform)
+        if (collision.gameObject.CompareTag("BlackBlock"))
         {
-            isGrounded = enteringOrStaying;
+            isValidPlatform = isBlack;
         }
-        else if (!enteringOrStaying)
+        else if (collision.gameObject.CompareTag("WhiteBlock"))
+        {
+            isValidPlatform = !isBlack;
+        }
+
+        if (enteringOrStaying)
+        {
+            isGrounded = isValidPlatform;
+        }
+        else
         {
             isGrounded = false;
         }
+    }
+
+    void TriggerFailure()
+    {
+        Debug.Log("触碰错误颜色！游戏结束");
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
     public void OnRollComplete()
@@ -252,12 +301,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("DeathZone"))
         {
-            Debug.Log("进入死亡区域，游戏结束！");
-#if UNITY_EDITOR
-            //UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
+            TriggerFailure();
         }
     }
 
@@ -267,11 +311,7 @@ public class PlayerController : MonoBehaviour
         style.fontSize = 20;
         style.normal.textColor = Color.red;
 
-        float cooldownLeft = Mathf.Max(0, gravityCooldown - (Time.time - lastGravityFlipTime));
-
         GUI.Label(new Rect(10, 10, 300, 50), $"接地状态: {isGrounded}", style);
         GUI.Label(new Rect(10, 40, 300, 50), $"速度: {rb.velocity}", style);
-        GUI.Label(new Rect(10, 70, 300, 50), $"跳跃状态: {isInJumpState}", style);
-        GUI.Label(new Rect(10, 100, 300, 50), $"反重力冷却: {cooldownLeft:F1}s", style);
     }
 }
