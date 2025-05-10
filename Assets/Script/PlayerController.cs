@@ -1,21 +1,22 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody)), RequireComponent(typeof(Collider)), RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
-    private float lastStuckCheck = 0f;
     // 移动参数
     [Header("Movement Settings")]
     public float moveSpeed = 8f;
     public float jumpForce = 12f;
     [Range(0, 1)] public float airControl = 0.1f;
 
-
     // 重力系统
     [Header("Gravity Settings")]
     public float gravityMultiplier = 2f;
     public float baseGravity = -9.81f;
+    public float gravityCooldown = 0.5f; // 反重力冷却时间
     private Vector3 currentGravity;
     private bool isGravityNormal = true;
+    private float lastGravityFlipTime;
 
     // 颜色系统
     [Header("Color Settings")]
@@ -23,121 +24,149 @@ public class PlayerController : MonoBehaviour
     public Material whiteMat;
     [HideInInspector] public bool isBlack = true;
 
+    // 动画参数
+    [Header("Animation Settings")]
+    public string runState = "RunForward";
+    public string jumpUpState = "JumpWhileRunningUp";
+    public string fallState = "FallingLoop";
+    public string sprintState = "Sprint";
+    public string rollState = "RollForward";
+    public float sprintThreshold = 5f;
+    public float hardLandingSpeedThreshold = -5f;
+
     // 组件引用
     private Rigidbody rb;
     private Renderer rend;
+    private Collider col;
+    private Animator anim;
 
-    // 当前接触到的地面
-    private GameObject currentPlatform;
+    // 动画参数哈希
+    private int speedHash;
+    private int verticalSpeedHash;
+    private int isGroundedHash;
+    private int jumpTriggerHash;
+    private int hardLandingHash;
 
-    [Header("Stuck Settings")]
-    public float unstuckForce = 10f; // 可调节的解卡力大小
+    // 状态变量
+    private bool isGrounded;
+    private float lastStuckCheck;
+    private bool shouldHardLand;
+    private bool isActionLocked;
+    private bool isInJumpState;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         rend = GetComponent<Renderer>();
-        rend.material = blackMat;
-        InitializePhysics();
-    }
+        col = GetComponent<Collider>();
+        anim = GetComponent<Animator>();
 
-    void InitializePhysics()
-    {
-        // 创建无摩擦物理材质
+        // 初始化动画参数哈希
+        speedHash = Animator.StringToHash("Speed");
+        verticalSpeedHash = Animator.StringToHash("VerticalSpeed");
+        isGroundedHash = Animator.StringToHash("IsGrounded");
+        jumpTriggerHash = Animator.StringToHash("JumpTrigger");
+        hardLandingHash = Animator.StringToHash("HardLanding");
+
+        rb.useGravity = false;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        currentGravity = new Vector3(0, baseGravity, 0);
+
+        // 设置无摩擦物理材质
         PhysicMaterial mat = new PhysicMaterial();
         mat.dynamicFriction = 0;
         mat.staticFriction = 0;
-        GetComponent<Collider>().material = mat;
+        col.material = mat;
+    }
 
-        rb.useGravity = false;
-        currentGravity = new Vector3(0, baseGravity, 0);
+    void Update()
+    {
+        // 更新动作锁状态
+        UpdateActionLockStatus();
+
+        // 更新跳跃状态
+        isInJumpState = anim.GetCurrentAnimatorStateInfo(0).IsName(jumpUpState) ||
+                       anim.GetCurrentAnimatorStateInfo(0).IsName(fallState);
+
+        HandleInput();
+
+        HandleEdgeStuck();
+        UpdateAnimationParameters();
+
+        // 实时检测是否需要硬着陆
+        shouldHardLand = rb.velocity.y < hardLandingSpeedThreshold;
+        anim.SetBool(hardLandingHash, shouldHardLand);
+    }
+
+    void UpdateActionLockStatus()
+    {
+        AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+        isActionLocked = stateInfo.IsName(jumpUpState) ||
+                        (stateInfo.IsName(fallState) && !isGrounded);
     }
 
     void FixedUpdate()
     {
         HandleMovement();
         ApplyCustomGravity();
-        CheckColorMatchOnStay(); // 新增颜色检测
-        // 输出速度到控制台
-        Debug.Log($"当前速度：{rb.velocity}");
     }
 
-    void Update()
+    void UpdateAnimationParameters()
     {
-        HandleInput();
-        HandleEdgeStuck();
+        if (!isActionLocked)
+        {
+            anim.SetFloat(speedHash, Mathf.Abs(rb.velocity.x));
+            anim.SetFloat(verticalSpeedHash, rb.velocity.y);
+        }
+        anim.SetBool(isGroundedHash, isGrounded);
     }
 
     void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        // 跳跃
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isActionLocked)
         {
-            TryJump();
+            float direction = isGravityNormal ? 1f : -1f;
+            rb.AddForce(Vector3.up * jumpForce * direction, ForceMode.Impulse);
+            anim.SetTrigger(jumpTriggerHash);
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        // 反重力（仅在跳跃状态可用+冷却检查）
+        if (Input.GetKeyDown(KeyCode.LeftShift) && isInJumpState)
         {
             ReverseGravity();
         }
 
+        // 颜色切换
         if (Input.GetKeyDown(KeyCode.C))
         {
             ToggleColor();
         }
     }
 
-    //void HandleEdgeStuck()
-    //{
-    //    // 检测玩家的横向速度是否接近 0
-    //    if (Mathf.Abs(rb.velocity.x) == 0f && Mathf.Abs(rb.velocity.y) == 0f)
-    //    {
-    //        // 根据当前重力方向计算 45 度的方向向量
-    //        Vector3 unstuckDirection;
-    //        if (isGravityNormal)
-    //        {
-    //            // 重力向下，施加左上方 20 度的力
-    //            unstuckDirection = new Vector3(-Mathf.Cos(Mathf.Deg2Rad * 20), Mathf.Sin(Mathf.Deg2Rad * 20), 0).normalized;
-    //        }
-    //        else
-    //        {
-    //            // 重力向上，施加左下方 20 度的力
-    //            unstuckDirection = new Vector3(-Mathf.Cos(Mathf.Deg2Rad * 20), -Mathf.Sin(Mathf.Deg2Rad * 20), 0).normalized;
-    //        }
-
-    //        // 施加力
-    //        rb.AddForce(unstuckDirection * unstuckForce, ForceMode.Impulse);
-    //        Debug.Log($"检测到卡住，施加解卡力：方向 {unstuckDirection}，大小 {unstuckForce}");
-    //    }
-    //}
-
-
-    void HandleEdgeStuck()
+    void ReverseGravity()
     {
-        // 更精确的卡顿检测条件
-        if (Mathf.Abs(rb.velocity.x) == 0f &&
-            Mathf.Abs(rb.velocity.y) == 0f &&
-           Time.time > lastStuckCheck + 0.5f)
-        {
-            Vector3 unstuckDirection = isGravityNormal ?
-                new Vector3(-30f, 0.3f, 0).normalized :
-                new Vector3(-30f, -0.3f, 0).normalized;
+        // 冷却时间检查
+        if (Time.time - lastGravityFlipTime < gravityCooldown) return;
 
-            rb.AddForce(unstuckDirection * unstuckForce, ForceMode.Impulse);
-            lastStuckCheck = Time.time;
-        }
+        // 执行反重力
+        isGravityNormal = !isGravityNormal;
+        currentGravity.y = isGravityNormal ? baseGravity : -baseGravity;
+        transform.Rotate(180f, 0f, 0f);
+
+        // 安全修改速度（防止连续反转导致速度失控）
+        float newYVelocity = Mathf.Clamp(-rb.velocity.y * 0.7f, -jumpForce * 1.2f, jumpForce * 1.2f);
+        rb.velocity = new Vector3(rb.velocity.x, newYVelocity, rb.velocity.z);
+
+        lastGravityFlipTime = Time.time;
     }
-
 
     void HandleMovement()
     {
-        float controlFactor = IsGrounded() ? 1f : airControl;
-
-        // 使用AddForce而不是直接设置velocity
+        float controlFactor = isGrounded ? 1f : airControl;
         float speedDifference = moveSpeed - rb.velocity.x;
         rb.AddForce(Vector3.right * speedDifference * controlFactor * 10f);
 
-        // 添加速度限制
         if (Mathf.Abs(rb.velocity.x) > moveSpeed)
         {
             rb.velocity = new Vector3(
@@ -153,20 +182,20 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(currentGravity * gravityMultiplier, ForceMode.Acceleration);
     }
 
-    void TryJump()
+    void HandleEdgeStuck()
     {
-        if (IsGrounded())
+        if (Time.time > lastStuckCheck + 0.5f &&
+            Mathf.Abs(rb.velocity.x) < 0.1f &&
+            !isGrounded &&
+            !isActionLocked)
         {
-            float direction = isGravityNormal ? 1f : -1f;
-            rb.AddForce(Vector3.up * jumpForce * direction, ForceMode.Impulse);
-        }
-    }
+            Vector3 pushDir = isGravityNormal ?
+                new Vector3(-0.7f, 0.3f, 0).normalized :
+                new Vector3(-0.7f, -0.3f, 0).normalized;
 
-    void ReverseGravity()
-    {
-        isGravityNormal = !isGravityNormal;
-        currentGravity.y = isGravityNormal ? baseGravity : -baseGravity;
-        transform.Rotate(180f, 0f, 0f);
+            rb.AddForce(pushDir * 10f, ForceMode.Impulse);
+            lastStuckCheck = Time.time;
+        }
     }
 
     void ToggleColor()
@@ -175,43 +204,48 @@ public class PlayerController : MonoBehaviour
         rend.material = isBlack ? blackMat : whiteMat;
     }
 
-    bool IsGrounded()
-    {
-        float rayLength = 1.1f;
-        Vector3 rayDirection = isGravityNormal ? Vector3.down : Vector3.up;
-        return Physics.Raycast(transform.position, rayDirection, rayLength);
-    }
-
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("BlackBlock") || collision.gameObject.CompareTag("WhiteBlock"))
+        bool wasGrounded = isGrounded;
+        CheckGroundStatus(collision, true);
+
+        if (!wasGrounded && isGrounded && shouldHardLand)
         {
-            currentPlatform = collision.gameObject; // 保存当前平台
+            anim.Play(rollState, 0, 0f);
         }
+    }
+
+    void OnCollisionStay(Collision collision)
+    {
+        CheckGroundStatus(collision, true);
     }
 
     void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject == currentPlatform)
+        CheckGroundStatus(collision, false);
+    }
+
+    void CheckGroundStatus(Collision collision, bool enteringOrStaying)
+    {
+        if (collision.gameObject.CompareTag("DeathZone")) return;
+
+        bool isValidPlatform = false;
+        if (collision.gameObject.CompareTag("BlackBlock") && isBlack) isValidPlatform = true;
+        if (collision.gameObject.CompareTag("WhiteBlock") && !isBlack) isValidPlatform = true;
+
+        if (isValidPlatform)
         {
-            currentPlatform = null;
+            isGrounded = enteringOrStaying;
+        }
+        else if (!enteringOrStaying)
+        {
+            isGrounded = false;
         }
     }
 
-    void CheckColorMatchOnStay()
+    public void OnRollComplete()
     {
-        if (currentPlatform == null) return;
-
-        bool isBlockBlack = currentPlatform.CompareTag("BlackBlock");
-        if (isBlockBlack != isBlack)
-        {
-            Debug.Log("颜色不匹配，游戏结束！");
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
-        }
+        anim.Play(runState);
     }
 
     void OnTriggerEnter(Collider other)
@@ -227,10 +261,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
+    void OnGUI()
     {
-        Gizmos.color = Color.red;
-        Vector3 rayDirection = isGravityNormal ? Vector3.down : Vector3.up;
-        Gizmos.DrawRay(transform.position, rayDirection * 1.1f);
+        GUIStyle style = new GUIStyle();
+        style.fontSize = 20;
+        style.normal.textColor = Color.red;
+
+        float cooldownLeft = Mathf.Max(0, gravityCooldown - (Time.time - lastGravityFlipTime));
+
+        GUI.Label(new Rect(10, 10, 300, 50), $"接地状态: {isGrounded}", style);
+        GUI.Label(new Rect(10, 40, 300, 50), $"速度: {rb.velocity}", style);
+        GUI.Label(new Rect(10, 70, 300, 50), $"跳跃状态: {isInJumpState}", style);
+        GUI.Label(new Rect(10, 100, 300, 50), $"反重力冷却: {cooldownLeft:F1}s", style);
     }
 }
