@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody)), RequireComponent(typeof(Collider)), RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour
@@ -20,7 +21,7 @@ public class PlayerController : MonoBehaviour
 
     // 颜色系统
     [Header("Color Settings")]
-    public Renderer targetRenderer;
+    public Renderer[] colorRenderers; // 需要变色的所有渲染器（Chest, Arms, Legs等）
     public Material blackMat;
     public Material whiteMat;
     [HideInInspector] public bool isBlack = true;
@@ -60,12 +61,13 @@ public class PlayerController : MonoBehaviour
         col = GetComponent<Collider>();
         anim = GetComponent<Animator>();
 
-        if (targetRenderer == null)
+        // 自动查找需要变色的渲染器
+        if (colorRenderers == null || colorRenderers.Length == 0)
         {
-            Transform chest = transform.Find("Mesh/Body/Chest");
-            if (chest != null) targetRenderer = chest.GetComponent<Renderer>();
+            FindColorRenderers();
         }
 
+        // 初始化动画参数
         speedHash = Animator.StringToHash("Speed");
         verticalSpeedHash = Animator.StringToHash("VerticalSpeed");
         isGroundedHash = Animator.StringToHash("IsGrounded");
@@ -76,12 +78,49 @@ public class PlayerController : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         currentGravity = new Vector3(0, baseGravity, 0);
 
+        // 物理材质
         PhysicMaterial mat = new PhysicMaterial();
         mat.dynamicFriction = 0;
         mat.staticFriction = 0;
         col.material = mat;
 
         UpdateColorMaterial();
+    }
+
+    // 自动查找需要变色的渲染器
+    void FindColorRenderers()
+    {
+        Transform meshRoot = transform.Find("Mesh");
+        if (meshRoot != null)
+        {
+            List<Renderer> renderers = new List<Renderer>();
+
+            // 查找身体各部位
+            Transform body = meshRoot.Find("Body");
+            if (body != null)
+            {
+                AddRendererIfFound(body, "Chest", renderers);
+                AddRendererIfFound(body, "Arms", renderers);
+                AddRendererIfFound(body, "Legs", renderers);
+            }
+
+            colorRenderers = renderers.ToArray();
+        }
+
+        if (colorRenderers == null || colorRenderers.Length == 0)
+        {
+            Debug.LogWarning("未找到需要变色的渲染器！请手动赋值或检查模型层级");
+        }
+    }
+
+    void AddRendererIfFound(Transform parent, string childName, List<Renderer> renderers)
+    {
+        Transform child = parent.Find(childName);
+        if (child != null)
+        {
+            Renderer r = child.GetComponent<Renderer>();
+            if (r != null) renderers.Add(r);
+        }
     }
 
     void Update()
@@ -145,25 +184,32 @@ public class PlayerController : MonoBehaviour
     {
         if (Time.time - lastGravityFlipTime < gravityCooldown) return;
 
-        // 获取角色顶部位置
-        Vector3 topPosition = transform.position + (isGravityNormal ? Vector3.up * col.bounds.extents.y : Vector3.down * col.bounds.extents.y);
+        // 记录当前顶部位置（基于重力方向）
+        Vector3 pivotPoint = GetPivotPosition();
 
-        // 翻转重力方向
+        // 翻转重力
         isGravityNormal = !isGravityNormal;
         currentGravity.y = isGravityNormal ? baseGravity : -baseGravity;
 
-        // 旋转角色
-        transform.Rotate(180f, 0f, 0f);
+        // 世界空间旋转
+        transform.Rotate(180f, 0f, 0f, Space.World);
 
-        // 调整角色位置，使顶部位置保持不变
-        Vector3 newTopPosition = transform.position + (isGravityNormal ? Vector3.up * col.bounds.extents.y : Vector3.down * col.bounds.extents.y);
-        transform.position += topPosition - newTopPosition;
+        // 位置补偿
+        Vector3 newPivot = GetPivotPosition();
+        transform.position += pivotPoint - newPivot;
 
-        // 调整垂直速度，避免翻转后速度过大
-        float newYVelocity = Mathf.Clamp(-rb.velocity.y * 0.7f, -jumpForce * 1.2f, jumpForce * 1.2f);
+        // 速度调整
+        float newYVelocity = Mathf.Clamp(-rb.velocity.y * 0.7f, -jumpForce * 1.5f, jumpForce * 1.5f);
         rb.velocity = new Vector3(rb.velocity.x, newYVelocity, rb.velocity.z);
 
         lastGravityFlipTime = Time.time;
+    }
+
+    Vector3 GetPivotPosition()
+    {
+        // 根据当前重力方向返回旋转轴心位置
+        float offset = col.bounds.extents.y;
+        return transform.position + (isGravityNormal ? Vector3.up * offset : Vector3.down * offset);
     }
 
     void HandleMovement()
@@ -211,19 +257,19 @@ public class PlayerController : MonoBehaviour
 
     void UpdateColorMaterial()
     {
-        if (targetRenderer != null)
+        Material targetMat = isBlack ? blackMat : whiteMat;
+
+        foreach (Renderer renderer in colorRenderers)
         {
-            targetRenderer.material = isBlack ? blackMat : whiteMat;
-        }
-        else
-        {
-            Debug.LogWarning("目标渲染器未赋值！");
+            if (renderer != null)
+            {
+                renderer.material = targetMat;
+            }
         }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        // 立即检测错误颜色碰撞
         CheckFailureCollision(collision.gameObject);
 
         bool wasGrounded = isGrounded;
@@ -259,7 +305,7 @@ public class PlayerController : MonoBehaviour
 
     void CheckGroundStatus(Collision collision, bool enteringOrStaying)
     {
-        if (collision.gameObject.CompareTag("DeathZone")) return;
+        //if (collision.gameObject.CompareTag("DeathZone")) return;
 
         bool isValidPlatform = false;
 
@@ -271,6 +317,8 @@ public class PlayerController : MonoBehaviour
         {
             isValidPlatform = !isBlack;
         }
+
+        isValidPlatform = true;
 
         if (enteringOrStaying)
         {
@@ -286,7 +334,7 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("触碰错误颜色！游戏结束");
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
+        //UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
 #endif
@@ -311,7 +359,18 @@ public class PlayerController : MonoBehaviour
         style.fontSize = 20;
         style.normal.textColor = Color.red;
 
+        float cooldownLeft = Mathf.Max(0, gravityCooldown - (Time.time - lastGravityFlipTime));
+
         GUI.Label(new Rect(10, 10, 300, 50), $"接地状态: {isGrounded}", style);
         GUI.Label(new Rect(10, 40, 300, 50), $"速度: {rb.velocity}", style);
+        GUI.Label(new Rect(10, 70, 300, 50), $"重力方向: {(isGravityNormal ? "正常" : "反转")}", style);
+        GUI.Label(new Rect(10, 100, 300, 50), $"反重力冷却: {cooldownLeft:F1}s", style);
+    }
+
+    // 调试可视化
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawSphere(GetPivotPosition(), 0.1f);
     }
 }
