@@ -4,13 +4,11 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Rigidbody)), RequireComponent(typeof(Collider)), RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
-    // 移动参数
     [Header("Movement Settings")]
     public float moveSpeed = 8f;
     public float jumpForce = 12f;
     [Range(0, 1)] public float airControl = 0.1f;
 
-    // 重力系统
     [Header("Gravity Settings")]
     public float gravityMultiplier = 2f;
     public float baseGravity = -9.81f;
@@ -19,14 +17,12 @@ public class PlayerController : MonoBehaviour
     private bool isGravityNormal = true;
     private float lastGravityFlipTime;
 
-    // 颜色系统
     [Header("Color Settings")]
-    public Renderer[] colorRenderers; // 需要变色的所有渲染器（Chest, Arms, Legs等）
+    public Renderer[] colorRenderers;
     public Material blackMat;
     public Material whiteMat;
     [HideInInspector] public bool isBlack = true;
 
-    // 动画参数
     [Header("Animation Settings")]
     public string runState = "RunForward";
     public string jumpUpState = "JumpWhileRunningUp";
@@ -36,38 +32,38 @@ public class PlayerController : MonoBehaviour
     public float sprintThreshold = 5f;
     public float hardLandingSpeedThreshold = -5f;
 
-    // 组件引用
-    private Rigidbody rb;
-    private Collider col;
-    private Animator anim;
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private Collider col;
+    [SerializeField] private Animator anim;
 
-    // 动画参数哈希
     private int speedHash;
     private int verticalSpeedHash;
     private int isGroundedHash;
     private int jumpTriggerHash;
     private int hardLandingHash;
 
-    // 状态变量
     private bool isGrounded;
     private float lastStuckCheck;
     private bool shouldHardLand;
     private bool isActionLocked;
     private bool isInJumpState;
 
+    private GameObject currentPlatform;
+
+    void Awake()
+    {
+        if (rb == null) rb = GetComponent<Rigidbody>();
+        if (col == null) col = GetComponent<Collider>();
+        if (anim == null) anim = GetComponent<Animator>();
+    }
+
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        col = GetComponent<Collider>();
-        anim = GetComponent<Animator>();
-
-        // 自动查找需要变色的渲染器
         if (colorRenderers == null || colorRenderers.Length == 0)
         {
             FindColorRenderers();
         }
 
-        // 初始化动画参数
         speedHash = Animator.StringToHash("Speed");
         verticalSpeedHash = Animator.StringToHash("VerticalSpeed");
         isGroundedHash = Animator.StringToHash("IsGrounded");
@@ -78,7 +74,6 @@ public class PlayerController : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         currentGravity = new Vector3(0, baseGravity, 0);
 
-        // 物理材质
         PhysicMaterial mat = new PhysicMaterial();
         mat.dynamicFriction = 0;
         mat.staticFriction = 0;
@@ -87,7 +82,6 @@ public class PlayerController : MonoBehaviour
         UpdateColorMaterial();
     }
 
-    // 自动查找需要变色的渲染器
     void FindColorRenderers()
     {
         Transform meshRoot = transform.Find("Mesh");
@@ -95,7 +89,6 @@ public class PlayerController : MonoBehaviour
         {
             List<Renderer> renderers = new List<Renderer>();
 
-            // 查找身体各部位
             Transform body = meshRoot.Find("Body");
             if (body != null)
             {
@@ -125,6 +118,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (col == null) return;
+
         UpdateActionLockStatus();
         isInJumpState = anim.GetCurrentAnimatorStateInfo(0).IsName(jumpUpState) ||
                        anim.GetCurrentAnimatorStateInfo(0).IsName(fallState);
@@ -169,7 +164,7 @@ public class PlayerController : MonoBehaviour
             anim.SetTrigger(jumpTriggerHash);
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && isInJumpState)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !isGrounded)
         {
             ReverseGravity();
         }
@@ -184,21 +179,16 @@ public class PlayerController : MonoBehaviour
     {
         if (Time.time - lastGravityFlipTime < gravityCooldown) return;
 
-        // 记录当前顶部位置（基于重力方向）
         Vector3 pivotPoint = GetPivotPosition();
 
-        // 翻转重力
         isGravityNormal = !isGravityNormal;
         currentGravity.y = isGravityNormal ? baseGravity : -baseGravity;
 
-        // 世界空间旋转
         transform.Rotate(180f, 0f, 0f, Space.World);
 
-        // 位置补偿
         Vector3 newPivot = GetPivotPosition();
         transform.position += pivotPoint - newPivot;
 
-        // 速度调整
         float newYVelocity = Mathf.Clamp(-rb.velocity.y * 0.7f, -jumpForce * 1.5f, jumpForce * 1.5f);
         rb.velocity = new Vector3(rb.velocity.x, newYVelocity, rb.velocity.z);
 
@@ -207,7 +197,7 @@ public class PlayerController : MonoBehaviour
 
     Vector3 GetPivotPosition()
     {
-        // 根据当前重力方向返回旋转轴心位置
+        if (col == null) return transform.position;
         float offset = col.bounds.extents.y;
         return transform.position + (isGravityNormal ? Vector3.up * offset : Vector3.down * offset);
     }
@@ -253,6 +243,16 @@ public class PlayerController : MonoBehaviour
     {
         isBlack = !isBlack;
         UpdateColorMaterial();
+
+        // 新增：站在平台上变色时立即检查失败
+        if (isGrounded && currentPlatform != null)
+        {
+            if ((currentPlatform.CompareTag("BlackBlock") && !isBlack) ||
+                (currentPlatform.CompareTag("WhiteBlock") && isBlack))
+            {
+                TriggerFailure();
+            }
+        }
     }
 
     void UpdateColorMaterial()
@@ -275,9 +275,16 @@ public class PlayerController : MonoBehaviour
         bool wasGrounded = isGrounded;
         CheckGroundStatus(collision, true);
 
-        if (!wasGrounded && isGrounded && shouldHardLand)
+        if (!wasGrounded && isGrounded)
         {
-            anim.Play(rollState, 0, 0f);
+            if (shouldHardLand)
+            {
+                anim.Play(rollState, 0, 0f);
+            }
+            else
+            {
+                anim.Play(runState, 0, 0f); // 新增：软着陆也切换回跑步
+            }
         }
     }
 
@@ -305,20 +312,22 @@ public class PlayerController : MonoBehaviour
 
     void CheckGroundStatus(Collision collision, bool enteringOrStaying)
     {
-        //if (collision.gameObject.CompareTag("DeathZone")) return;
-
         bool isValidPlatform = false;
 
         if (collision.gameObject.CompareTag("BlackBlock"))
         {
             isValidPlatform = isBlack;
+            currentPlatform = collision.gameObject;
         }
         else if (collision.gameObject.CompareTag("WhiteBlock"))
         {
             isValidPlatform = !isBlack;
+            currentPlatform = collision.gameObject;
         }
-
-        isValidPlatform = true;
+        else
+        {
+            currentPlatform = null;
+        }
 
         if (enteringOrStaying)
         {
@@ -327,6 +336,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             isGrounded = false;
+            currentPlatform = null;
         }
     }
 
@@ -334,7 +344,7 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("触碰错误颜色！游戏结束");
 #if UNITY_EDITOR
-        //UnityEditor.EditorApplication.isPlaying = false;
+        UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
 #endif
@@ -367,9 +377,9 @@ public class PlayerController : MonoBehaviour
         GUI.Label(new Rect(10, 100, 300, 50), $"反重力冷却: {cooldownLeft:F1}s", style);
     }
 
-    // 调试可视化
     void OnDrawGizmosSelected()
     {
+        if (col == null) return;
         Gizmos.color = Color.cyan;
         Gizmos.DrawSphere(GetPivotPosition(), 0.1f);
     }
