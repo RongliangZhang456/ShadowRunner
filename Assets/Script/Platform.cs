@@ -9,11 +9,7 @@ public class Platform : MonoBehaviour
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
         if (player != null)
         {
-            // Ö±½Ó·ÃÎÊpublic×Ö¶Î
-            bool shouldCollide = (isBlackPlatform && player.isBlack) ||
-                                (!isBlackPlatform && !player.isBlack);
-
-            GetComponent<Collider>().isTrigger = !shouldCollide;
+            GetComponent<Collider>().isTrigger = (isBlackPlatform != player.isBlack);
         }
     }
 
