@@ -635,6 +635,7 @@ GameObject:
   - component: {fileID: 1123604553}
   - component: {fileID: 1123604552}
   - component: {fileID: 1123604557}
+  - component: {fileID: 1123604558}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -712,7 +713,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -774,10 +775,42 @@ MonoBehaviour:
   airControl: 0.5
   gravityMultiplier: 2
   baseGravity: -9.81
+  gravityCooldown: 0.5
+  colorRenderers: []
   blackMat: {fileID: 2100000, guid: c85071ee3fb4ba54b9b0f83e34922d15, type: 2}
   whiteMat: {fileID: 2100000, guid: 683ed3164a67d5248831fc3b2ceadc03, type: 2}
   isBlack: 1
-  unstuckForce: 100
+  runState: RunForward
+  jumpUpState: JumpWhileRunningUp
+  fallState: FallingLoop
+  sprintState: Sprint
+  rollState: RollForward
+  sprintThreshold: 5
+  hardLandingSpeedThreshold: -5
+  rb: {fileID: 0}
+  col: {fileID: 0}
+  anim: {fileID: 0}
+--- !u!95 &1123604558
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1123604551}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &1482285667
 PrefabInstance:
   m_ObjectHideFlags: 0
