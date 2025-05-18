@@ -13,7 +13,8 @@ public class PlayerController : MonoBehaviour
     public float gravityMultiplier = 2f;
     public float baseGravity = -9.81f;
     public float gravityCooldown = 0.5f;
-    private Vector3 currentGravity;
+    public bool canFlipGravityInAir = false;
+	private Vector3 currentGravity;
     private bool isGravityNormal = true;
     private float lastGravityFlipTime;
 	private bool hasFlippedGravityInAir = false;
@@ -178,7 +179,10 @@ public class PlayerController : MonoBehaviour
 
     void ReverseGravity()
     {
-        if (hasFlippedGravityInAir) return;
+		if (!canFlipGravityInAir)
+		{
+			if (hasFlippedGravityInAir) return;
+		}
 		if (Time.time - lastGravityFlipTime < gravityCooldown) return;
 
         Vector3 pivotPoint = GetPivotPosition();
