@@ -16,8 +16,9 @@ public class PlayerController : MonoBehaviour
     private Vector3 currentGravity;
     private bool isGravityNormal = true;
     private float lastGravityFlipTime;
+	private bool hasFlippedGravityInAir = false;
 
-    [Header("Color Settings")]
+	[Header("Color Settings")]
     public Renderer[] colorRenderers;
     public Material blackMat;
     public Material whiteMat;
@@ -164,7 +165,7 @@ public class PlayerController : MonoBehaviour
             anim.SetTrigger(jumpTriggerHash);
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !isGrounded)
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             ReverseGravity();
         }
@@ -177,7 +178,8 @@ public class PlayerController : MonoBehaviour
 
     void ReverseGravity()
     {
-        if (Time.time - lastGravityFlipTime < gravityCooldown) return;
+        if (hasFlippedGravityInAir) return;
+		if (Time.time - lastGravityFlipTime < gravityCooldown) return;
 
         Vector3 pivotPoint = GetPivotPosition();
 
@@ -193,7 +195,8 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, newYVelocity, rb.velocity.z);
 
         lastGravityFlipTime = Time.time;
-    }
+		hasFlippedGravityInAir = true;
+	}
 
     Vector3 GetPivotPosition()
     {
@@ -332,7 +335,11 @@ public class PlayerController : MonoBehaviour
         if (enteringOrStaying)
         {
             isGrounded = isValidPlatform;
-        }
+			if (isGrounded)
+			{
+				hasFlippedGravityInAir = false;
+			}
+		}
         else
         {
             isGrounded = false;
