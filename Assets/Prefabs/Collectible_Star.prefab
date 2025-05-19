@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0.2
-  onControllerEffect: {fileID: 7934837574686300914, guid: a8ec1f1836007a347a5f1812a232d583, type: 3}
+  onControllerEffect: {fileID: 5609061033381770541, guid: e5df0f02f90ffae429dddec4cfc43178, type: 3}
 --- !u!1 &8321453150816668697
 GameObject:
   m_ObjectHideFlags: 0

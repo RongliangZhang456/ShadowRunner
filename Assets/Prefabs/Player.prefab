@@ -1045,7 +1045,8 @@ MonoBehaviour:
   airControl: 0.2
   gravityMultiplier: 2
   baseGravity: -9.81
-  gravityCooldown: 0.8
+  gravityCooldown: 0
+  canFlipGravityInAir: 1
   colorRenderers: []
   blackMat: {fileID: 2100000, guid: c85071ee3fb4ba54b9b0f83e34922d15, type: 2}
   whiteMat: {fileID: 2100000, guid: 683ed3164a67d5248831fc3b2ceadc03, type: 2}
