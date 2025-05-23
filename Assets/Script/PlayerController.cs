@@ -13,15 +13,18 @@ public class PlayerController : MonoBehaviour
     public float gravityMultiplier = 2f;
     public float baseGravity = -9.81f;
     public float gravityCooldown = 0.5f;
-    private Vector3 currentGravity;
+    public bool enableAirGravityFlip = false;
+	private Vector3 currentGravity;
     private bool isGravityNormal = true;
     private float lastGravityFlipTime;
+	private bool isFlippedGravityInAir = false;
 
-    [Header("Color Settings")]
+	[Header("Color Settings")]
     public Renderer[] colorRenderers;
     public Material blackMat;
     public Material whiteMat;
-    [HideInInspector] public bool isBlack = true;
+    public bool isDefaultBlack = true;
+	[HideInInspector] public bool isCurrentBlack = true;
 
     [Header("Animation Settings")]
     public string runState = "RunForward";
@@ -32,7 +35,10 @@ public class PlayerController : MonoBehaviour
     public float sprintThreshold = 5f;
     public float hardLandingSpeedThreshold = -5f;
 
-    [SerializeField] private Rigidbody rb;
+    [Header("Death Settings")]
+    public bool enableRespawnToStart = true;
+
+	[SerializeField] private Rigidbody rb;
     [SerializeField] private Collider col;
     [SerializeField] private Animator anim;
 
@@ -72,15 +78,15 @@ public class PlayerController : MonoBehaviour
 
         rb.useGravity = false;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        currentGravity = new Vector3(0, baseGravity, 0);
+		currentGravity = new Vector3(0, baseGravity, 0);
 
-        PhysicMaterial mat = new PhysicMaterial();
+		PhysicMaterial mat = new PhysicMaterial();
         mat.dynamicFriction = 0;
         mat.staticFriction = 0;
         col.material = mat;
 
-        UpdateColorMaterial();
-    }
+        InitializePlayerState();
+	}
 
     void FindColorRenderers()
     {
@@ -116,7 +122,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Update()
+	// Called when the game starts or when the player respawns
+	void InitializePlayerState()
+	{
+		transform.position = Vector3.zero;
+		rb.velocity = Vector3.zero;
+		rb.angularVelocity = Vector3.zero;
+		isGrounded = true;
+		isCurrentBlack = isDefaultBlack;
+		UpdateColorMaterial();
+		// Reset gravity
+		if (currentGravity.y * baseGravity < 0f)
+		{
+			ReverseGravity();
+		}
+	}
+
+	void Update()
     {
         if (col == null) return;
 
@@ -164,7 +186,7 @@ public class PlayerController : MonoBehaviour
             anim.SetTrigger(jumpTriggerHash);
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !isGrounded)
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             ReverseGravity();
         }
@@ -177,7 +199,11 @@ public class PlayerController : MonoBehaviour
 
     void ReverseGravity()
     {
-        if (Time.time - lastGravityFlipTime < gravityCooldown) return;
+		if (!enableAirGravityFlip)
+		{
+			if (isFlippedGravityInAir) return;
+		}
+		if (Time.time - lastGravityFlipTime < gravityCooldown) return;
 
         Vector3 pivotPoint = GetPivotPosition();
 
@@ -193,7 +219,8 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, newYVelocity, rb.velocity.z);
 
         lastGravityFlipTime = Time.time;
-    }
+		isFlippedGravityInAir = true;
+	}
 
     Vector3 GetPivotPosition()
     {
@@ -241,14 +268,14 @@ public class PlayerController : MonoBehaviour
 
     void ToggleColor()
     {
-        isBlack = !isBlack;
+        isCurrentBlack = !isCurrentBlack;
         UpdateColorMaterial();
 
         // 新增：站在平台上变色时立即检查失败
         if (isGrounded && currentPlatform != null)
         {
-            if ((currentPlatform.CompareTag("BlackBlock") && !isBlack) ||
-                (currentPlatform.CompareTag("WhiteBlock") && isBlack))
+            if ((currentPlatform.CompareTag("BlackBlock") && !isCurrentBlack) ||
+                (currentPlatform.CompareTag("WhiteBlock") && isCurrentBlack))
             {
                 TriggerFailure();
             }
@@ -257,7 +284,7 @@ public class PlayerController : MonoBehaviour
 
     void UpdateColorMaterial()
     {
-        Material targetMat = isBlack ? blackMat : whiteMat;
+        Material targetMat = isCurrentBlack ? blackMat : whiteMat;
 
         foreach (Renderer renderer in colorRenderers)
         {
@@ -300,11 +327,11 @@ public class PlayerController : MonoBehaviour
 
     void CheckFailureCollision(GameObject other)
     {
-        if (other.CompareTag("BlackBlock") && !isBlack)
+        if (other.CompareTag("BlackBlock") && !isCurrentBlack)
         {
             TriggerFailure();
         }
-        else if (other.CompareTag("WhiteBlock") && isBlack)
+        else if (other.CompareTag("WhiteBlock") && isCurrentBlack)
         {
             TriggerFailure();
         }
@@ -316,12 +343,12 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("BlackBlock"))
         {
-            isValidPlatform = isBlack;
+            isValidPlatform = isCurrentBlack;
             currentPlatform = collision.gameObject;
         }
         else if (collision.gameObject.CompareTag("WhiteBlock"))
         {
-            isValidPlatform = !isBlack;
+            isValidPlatform = !isCurrentBlack;
             currentPlatform = collision.gameObject;
         }
         else
@@ -332,7 +359,11 @@ public class PlayerController : MonoBehaviour
         if (enteringOrStaying)
         {
             isGrounded = isValidPlatform;
-        }
+			if (isGrounded)
+			{
+				isFlippedGravityInAir = false;
+			}
+		}
         else
         {
             isGrounded = false;
@@ -343,11 +374,19 @@ public class PlayerController : MonoBehaviour
     void TriggerFailure()
     {
         Debug.Log("触碰错误颜色！游戏结束");
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+
+        if (enableRespawnToStart)
+        {
+            InitializePlayerState();
+		}
+        else
+        {
+            #if UNITY_EDITOR
+                        UnityEditor.EditorApplication.isPlaying = false;
+            #else
+                    Application.Quit();
+            #endif
+        }
     }
 
     public void OnRollComplete()
