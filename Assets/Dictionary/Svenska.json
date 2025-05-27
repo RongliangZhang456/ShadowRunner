@@ -7,8 +7,14 @@
     { "key": "time survived", "value": "ÖVERLEVNADSTID" },
     { "key": "score", "value": "POÄNG" },
     { "key": "stars collected", "value": "STJÄRNOR SAMLADES" },
+    { "key": "game over", "value": "SPEL ÖVER" },
+
     { "key": "Press the space bar to jump!", "value": "Tryck på mellanslag för att hoppa!" },
     { "key": "Press C to switch colours!", "value": "Tryck på C för att byta färger!" },
-    { "key": "Press LeftShift to reverse gravity!", "value": "Tryck på vänster Shift för att vända gravitationen!" }
+    { "key": "Press LeftShift to reverse gravity!", "value": "Tryck på vänster Shift för att vända gravitationen!" },
+
+    { "key": "Press Controller A to jump", "value": "Tryck på kontroll A för att hoppa" },
+    { "key": "Press RB to switch colours", "value": "Tryck på RB för att byta färger" },
+    { "key": "Press LB to reverse gravity", "value": "Tryck på LB för att vända gravitationen" }
   ]
 }
