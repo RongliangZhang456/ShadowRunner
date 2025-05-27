@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scenes/Color-change.unity.meta
 guid: c26a9c8989c97b4488d3520613bd0fec
+========
+guid: 0f4630e6952cd4e93a449b1cb03d6b3f
+>>>>>>>> 6220a74 (User Interface design):Assets/Scenes/GameOverScene.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

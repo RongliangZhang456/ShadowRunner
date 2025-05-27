@@ -428,7 +428,11 @@ PrefabInstance:
       value: -0.07998657
 =======
       value: -0.08000183
+<<<<<<< HEAD
 >>>>>>> 9a1ff07 (User Interface design)
+=======
+>>>>>>> 6220a74 (User Interface design)
+>>>>>>> 2973359 (User Interface design)
       objectReference: {fileID: 0}
     - target: {fileID: 8740838696814110508, guid: 44373c1366e91194fbd516b802b0337f, type: 3}
       propertyPath: m_Name
@@ -1200,7 +1204,11 @@ PrefabInstance:
       value: -0.07998657
 =======
       value: -0.08000183
+<<<<<<< HEAD
 >>>>>>> 9a1ff07 (User Interface design)
+=======
+>>>>>>> 6220a74 (User Interface design)
+>>>>>>> 2973359 (User Interface design)
       objectReference: {fileID: 0}
     - target: {fileID: 8930029882993183115, guid: 19ac16e5dbd185b43b567646ae5fd86e, type: 3}
       propertyPath: m_Name
@@ -1622,7 +1630,11 @@ PrefabInstance:
       value: -0.11999512
 =======
       value: -0.11999893
+<<<<<<< HEAD
 >>>>>>> 9a1ff07 (User Interface design)
+=======
+>>>>>>> 6220a74 (User Interface design)
+>>>>>>> 2973359 (User Interface design)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1857,7 +1869,11 @@ PrefabInstance:
       value: -0.11999512
 =======
       value: -0.11999893
+<<<<<<< HEAD
 >>>>>>> 9a1ff07 (User Interface design)
+=======
+>>>>>>> 6220a74 (User Interface design)
+>>>>>>> 2973359 (User Interface design)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2258,7 +2274,11 @@ PrefabInstance:
       value: -3.5654297
 =======
       value: -3.5654602
+<<<<<<< HEAD
 >>>>>>> 9a1ff07 (User Interface design)
+=======
+>>>>>>> 6220a74 (User Interface design)
+>>>>>>> 2973359 (User Interface design)
       objectReference: {fileID: 0}
     - target: {fileID: 1032589931381127461, guid: a98e38a09ea5a684fbe07e70cd65fa96, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2302,7 +2322,11 @@ PrefabInstance:
       value: -0.07998657
 =======
       value: -0.08000183
+<<<<<<< HEAD
 >>>>>>> 9a1ff07 (User Interface design)
+=======
+>>>>>>> 6220a74 (User Interface design)
+>>>>>>> 2973359 (User Interface design)
       objectReference: {fileID: 0}
     - target: {fileID: 9005631252097613271, guid: a98e38a09ea5a684fbe07e70cd65fa96, type: 3}
       propertyPath: m_Name
@@ -3359,7 +3383,11 @@ PrefabInstance:
       value: -0.07998657
 =======
       value: -0.08000183
+<<<<<<< HEAD
 >>>>>>> 9a1ff07 (User Interface design)
+=======
+>>>>>>> 6220a74 (User Interface design)
+>>>>>>> 2973359 (User Interface design)
       objectReference: {fileID: 0}
     - target: {fileID: 3453812014232927346, guid: 2f74ecb441300fa468c20abcf70c6599, type: 3}
       propertyPath: m_Name
@@ -3455,7 +3483,11 @@ PrefabInstance:
       value: -8.288818
 =======
       value: -8.288765
+<<<<<<< HEAD
 >>>>>>> 9a1ff07 (User Interface design)
+=======
+>>>>>>> 6220a74 (User Interface design)
+>>>>>>> 2973359 (User Interface design)
       objectReference: {fileID: 0}
     - target: {fileID: 6719499565544159360, guid: 2f74ecb441300fa468c20abcf70c6599, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3828,7 +3860,11 @@ PrefabInstance:
       value: -0.07998657
 =======
       value: -0.08000183
+<<<<<<< HEAD
 >>>>>>> 9a1ff07 (User Interface design)
+=======
+>>>>>>> 6220a74 (User Interface design)
+>>>>>>> 2973359 (User Interface design)
       objectReference: {fileID: 0}
     - target: {fileID: 2046219388552732120, guid: 452f2e8b7e5708f4e9551a097c23f3f2, type: 3}
       propertyPath: m_Name

@@ -30,7 +30,11 @@ public class LevelSelectHandler : PanelBase
             int index = i;
             levelButtons[i].onClick.AddListener(() => SelectLevel(index + 1));
         }
+<<<<<<< HEAD
 >>>>>>> 9a1ff07 (User Interface design)
+=======
+>>>>>>> 6220a74 (User Interface design)
+>>>>>>> 2973359 (User Interface design)
         optionsButton.onClick.AddListener(() =>
         {
             UIManager.Instance.HidePanel("LevelSelect");
@@ -50,7 +54,11 @@ public class LevelSelectHandler : PanelBase
     {
         Debug.Log("Level Selected: " + levelIndex);
     }
+<<<<<<< HEAD
 >>>>>>> 9a1ff07 (User Interface design)
+=======
+>>>>>>> 6220a74 (User Interface design)
+>>>>>>> 2973359 (User Interface design)
     public void OnEnable()
     {
         levelSelectText.text = LocalizationManager.Get("level select");
