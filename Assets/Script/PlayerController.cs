@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
     public string sprintState = "Sprint";
     public string rollState = "RollForward";
     public float sprintThreshold = 5f;
-    public float hardLandingSpeedThreshold = -5f;
+    public float hardLandingSpeedThreshold = -0.1f;
 
     [Header("Death Settings")]
     public bool enableRespawnToStart = true;
