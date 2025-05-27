@@ -7,6 +7,9 @@
     { "key": "time survived", "value": "TIME SURVIVED" },
     { "key": "score", "value": "SCORE" },
     { "key": "stars collected", "value": "STARS COLLECTED" },
-    { "key": "game over", "value": "GAME OVER" }
+    { "key": "game over", "value": "GAME OVER" },
+    { "key": "Press the space bar to jump!", "value": "Press the space bar to jump!"},
+    { "key": "Press C to switch colours!", "value": "Press C to switch colours!"},
+    { "key": "Press LeftShift to reverse gravity!", "value": "Press LeftShift to reverse gravity!"}
   ]
 }

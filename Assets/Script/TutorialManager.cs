@@ -3,7 +3,7 @@ using TMPro;
 
 public class TutorialManager : MonoBehaviour
 {
-    public TextMeshProUGUI hintText; // ÍÏ×§¸³Öµ
+    public TextMeshProUGUI hintText; // ï¿½ï¿½×§ï¿½ï¿½Öµ
     public float slowMotionScale = 0.3f;
 
     public void StartTutorial(string type)
@@ -11,13 +11,13 @@ public class TutorialManager : MonoBehaviour
         switch (type)
         {
             case "Jump":
-                hintText.text = "Press the space bar to jump!";
+                hintText.text = LocalizationManager.Get("Press the space bar to jump!");
                 break;
             case "Color":
-                hintText.text = "Press C to switch colours!";
+                hintText.text = LocalizationManager.Get("Press C to switch colours!");
                 break;
             case "Gravity":
-                hintText.text = "Press LeftShift to reverse gravity!";
+                hintText.text = LocalizationManager.Get("Press LeftShift to reverse gravity!");
                 break;
         }
 
