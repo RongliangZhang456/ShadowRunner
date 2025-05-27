@@ -1,0 +1,11 @@
+{
+  "entries": [
+    { "key": "level select", "value": "关卡选择" },
+    { "key": "back", "value": "返回" },
+    { "key": "options", "value": "选项" },
+    { "key": "language", "value": "语言" },
+    { "key": "time survived", "value": "生存时间" },
+    { "key": "score", "value": "分数" },
+    { "key": "stars collected", "value": "收集星星数" }
+  ]
+}
