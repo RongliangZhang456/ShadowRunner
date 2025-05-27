@@ -6,6 +6,7 @@
     { "key": "language", "value": "SPRÅK:" },
     { "key": "time survived", "value": "ÖVERLEVNADSTID" },
     { "key": "score", "value": "POÄNG" },
+<<<<<<< HEAD
     { "key": "stars collected", "value": "STJÄRNOR SAMLADES" },
     { "key": "game over", "value": "SPEL ÖVER" },
 
@@ -18,3 +19,8 @@
     { "key": "Press LB to reverse gravity", "value": "Tryck på LB för att vända gravitationen" }
   ]
 }
+=======
+    { "key": "stars collected", "value": "STJÄRNOR SAMLADES" }
+  ]
+}
+>>>>>>> 9a1ff07 (User Interface design)

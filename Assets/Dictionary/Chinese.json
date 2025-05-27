@@ -6,6 +6,7 @@
     { "key": "language", "value": "语言" },
     { "key": "time survived", "value": "生存时间" },
     { "key": "score", "value": "分数" },
+<<<<<<< HEAD
     { "key": "stars collected", "value": "收集星星数" },
     { "key": "game over", "value": "游戏结束" },
 
@@ -18,3 +19,8 @@
     { "key": "Press LB to reverse gravity", "value": "按手柄LB键反转重力" }
   ]
 }
+=======
+    { "key": "stars collected", "value": "收集星星数" }
+  ]
+}
+>>>>>>> 9a1ff07 (User Interface design)

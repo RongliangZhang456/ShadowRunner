@@ -15,12 +15,20 @@ public class LevelSelectHandler : PanelBase
     {
         this.gameObject.SetActive(false);
 
+<<<<<<< HEAD
         levelButtons[0].onClick.AddListener(() => UnityEngine.SceneManagement.SceneManager.LoadScene("TutorialScene"));
         //TODO: Replace with actual level names
         // levelButtons[1].onClick.AddListener(() => UnityEngine.SceneManagement.SceneManager.LoadScene(""));
         // levelButtons[2].onClick.AddListener(() => UnityEngine.SceneManagement.SceneManager.LoadScene(""));
 
 
+=======
+        for (int i = 0; i < levelButtons.Length; i++)
+        {
+            int index = i;
+            levelButtons[i].onClick.AddListener(() => SelectLevel(index + 1));
+        }
+>>>>>>> 9a1ff07 (User Interface design)
         optionsButton.onClick.AddListener(() =>
         {
             UIManager.Instance.HidePanel("LevelSelect");
@@ -34,6 +42,13 @@ public class LevelSelectHandler : PanelBase
         });
     }
 
+<<<<<<< HEAD
+=======
+    void SelectLevel(int levelIndex)
+    {
+        Debug.Log("Level Selected: " + levelIndex);
+    }
+>>>>>>> 9a1ff07 (User Interface design)
     public void OnEnable()
     {
         levelSelectText.text = LocalizationManager.Get("level select");

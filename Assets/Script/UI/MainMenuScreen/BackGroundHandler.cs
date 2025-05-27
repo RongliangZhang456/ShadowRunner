@@ -15,6 +15,9 @@ public class BackGroundHandler : PanelBase
             UIManager.Instance.ShowPanel("LevelSelect");
 
         });
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9a1ff07 (User Interface design)
     }
 }

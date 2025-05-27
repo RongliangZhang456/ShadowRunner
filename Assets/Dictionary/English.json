@@ -7,6 +7,7 @@
     { "key": "time survived", "value": "TIME SURVIVED" },
     { "key": "score", "value": "SCORE" },
     { "key": "stars collected", "value": "STARS COLLECTED" },
+<<<<<<< HEAD
     { "key": "game over", "value": "GAME OVER" },
 
     { "key": "Press the space bar to jump!", "value": "Press the space bar to jump!" },
@@ -18,3 +19,8 @@
     { "key": "Press LB to reverse gravity", "value": "Press LB to reverse gravity" }
   ]
 }
+=======
+    { "key": "game over", "value": "GAME OVER" }
+  ]
+}
+>>>>>>> 9a1ff07 (User Interface design)
