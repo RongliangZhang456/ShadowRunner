@@ -1,0 +1,11 @@
+{
+  "entries": [
+    { "key": "level select", "value": "VÄLJ NIVÅ" },
+    { "key": "back", "value": "TILLBAKA" },
+    { "key": "options", "value": "ALTERNATIV" },
+    { "key": "language", "value": "SPRÅK:" },
+    { "key": "time survived", "value": "ÖVERLEVNADSTID" },
+    { "key": "score", "value": "POÄNG" },
+    { "key": "stars collected", "value": "STJÄRNOR SAMLADES" }
+  ]
+}

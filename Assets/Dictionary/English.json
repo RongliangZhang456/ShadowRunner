@@ -1,0 +1,12 @@
+{
+  "entries": [
+    { "key": "level select", "value": "LEVEL SELECT" },
+    { "key": "back", "value": "BACK" },
+    { "key": "options", "value": "OPTIONS" },
+    { "key": "language", "value": "LANGUAGE:" },
+    { "key": "time survived", "value": "TIME SURVIVED" },
+    { "key": "score", "value": "SCORE" },
+    { "key": "stars collected", "value": "STARS COLLECTED" },
+    { "key": "game over", "value": "GAME OVER" }
+  ]
+}
