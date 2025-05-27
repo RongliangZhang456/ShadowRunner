@@ -1,0 +1,14 @@
+{
+  "entries": [
+    { "key": "level select", "value": "VÄLJ NIVÅ" },
+    { "key": "back", "value": "TILLBAKA" },
+    { "key": "options", "value": "ALTERNATIV" },
+    { "key": "language", "value": "SPRÅK:" },
+    { "key": "time survived", "value": "ÖVERLEVNADSTID" },
+    { "key": "score", "value": "POÄNG" },
+    { "key": "stars collected", "value": "STJÄRNOR SAMLADES" },
+    { "key": "Press the space bar to jump!", "value": "Tryck på mellanslag för att hoppa!" },
+    { "key": "Press C to switch colours!", "value": "Tryck på C för att byta färger!" },
+    { "key": "Press LeftShift to reverse gravity!", "value": "Tryck på vänster Shift för att vända gravitationen!" }
+  ]
+}
