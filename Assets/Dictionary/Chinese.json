@@ -1,0 +1,20 @@
+{
+  "entries": [
+    { "key": "level select", "value": "关卡选择" },
+    { "key": "back", "value": "返回" },
+    { "key": "options", "value": "选项" },
+    { "key": "language", "value": "语言" },
+    { "key": "time survived", "value": "生存时间" },
+    { "key": "score", "value": "分数" },
+    { "key": "stars collected", "value": "收集星星数" },
+    { "key": "game over", "value": "游戏结束" },
+
+    { "key": "Press the space bar to jump!", "value": "按空格键跳跃！" },
+    { "key": "Press C to switch colours!", "value": "按C键切换颜色！" },
+    { "key": "Press LeftShift to reverse gravity!", "value": "按左Shift键反转重力！" },
+
+    { "key": "Press Controller A to jump", "value": "按手柄A键跳跃" },
+    { "key": "Press RB to switch colours", "value": "按手柄RB键切换颜色" },
+    { "key": "Press LB to reverse gravity", "value": "按手柄LB键反转重力" }
+  ]
+}

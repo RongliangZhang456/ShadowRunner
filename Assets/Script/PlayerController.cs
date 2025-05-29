@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
+
 
 [RequireComponent(typeof(Rigidbody)), RequireComponent(typeof(Collider)), RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour
@@ -33,7 +35,7 @@ public class PlayerController : MonoBehaviour
     public string sprintState = "Sprint";
     public string rollState = "RollForward";
     public float sprintThreshold = 5f;
-    public float hardLandingSpeedThreshold = -5f;
+    public float hardLandingSpeedThreshold = -0.1f;
 
     [Header("Death Settings")]
     public bool enableRespawnToStart = true;
@@ -179,23 +181,45 @@ public class PlayerController : MonoBehaviour
 
     void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isActionLocked)
+        var keyboard = Keyboard.current;
+        var gamepad = Gamepad.current;
+
+        bool jumpPressed = false;
+        bool flipGravityPressed = false;
+        bool toggleColorPressed = false;
+
+        if (keyboard != null)
+        {
+            jumpPressed = keyboard.spaceKey.wasPressedThisFrame;
+            flipGravityPressed = keyboard.leftShiftKey.wasPressedThisFrame;
+            toggleColorPressed = keyboard.cKey.wasPressedThisFrame;
+        }
+
+        if (gamepad != null)
+        {
+            jumpPressed |= gamepad.buttonSouth.wasPressedThisFrame;       // A button
+            flipGravityPressed |= gamepad.leftShoulder.wasPressedThisFrame;
+            toggleColorPressed |= gamepad.rightShoulder.wasPressedThisFrame;
+        }
+
+        if (jumpPressed && isGrounded && !isActionLocked)
         {
             float direction = isGravityNormal ? 1f : -1f;
             rb.AddForce(Vector3.up * jumpForce * direction, ForceMode.Impulse);
             anim.SetTrigger(jumpTriggerHash);
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (flipGravityPressed)
         {
             ReverseGravity();
         }
 
-        if (Input.GetKeyDown(KeyCode.C))
+        if (toggleColorPressed)
         {
             ToggleColor();
         }
     }
+
 
     void ReverseGravity()
     {
