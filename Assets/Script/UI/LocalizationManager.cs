@@ -57,7 +57,7 @@ public class LocalizationManager : MonoBehaviour
         {
             return value;
         }
-
+        Debug.LogWarning($"Localization key '{key}' not found in language '{CurrentLanguage}'.");
         return key; // fallback: return key itself if not found
     }
 }

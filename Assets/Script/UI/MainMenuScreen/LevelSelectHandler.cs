@@ -4,7 +4,6 @@ using UnityEngine.UI;
 public class LevelSelectHandler : PanelBase
 {
     public Button[] levelButtons;
-    public Button optionsButton;
     public Button backButton;
     public Text levelSelectText;
     public Text backButtonText;
@@ -21,16 +20,9 @@ public class LevelSelectHandler : PanelBase
         // levelButtons[2].onClick.AddListener(() => UnityEngine.SceneManagement.SceneManager.LoadScene(""));
 
 
-        optionsButton.onClick.AddListener(() =>
-        {
-            UIManager.Instance.HidePanel("LevelSelect");
-            UIManager.Instance.ShowPanel("LanguageSelect");
-        });
-
         backButton.onClick.AddListener(() =>
         {
             UIManager.Instance.HidePanel("LevelSelect");
-            UIManager.Instance.ShowPanel("BackGround");
         });
     }
 

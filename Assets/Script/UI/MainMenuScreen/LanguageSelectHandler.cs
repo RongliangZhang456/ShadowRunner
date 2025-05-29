@@ -29,7 +29,7 @@ public class LanguageSelectHandler : PanelBase
         backButton.onClick.AddListener(() =>
         {
             UIManager.Instance.HidePanel("LanguageSelect");
-            UIManager.Instance.ShowPanel("LevelSelect");
+            UIManager.Instance.ShowPanel("BackGround");
         });
     }
 }
