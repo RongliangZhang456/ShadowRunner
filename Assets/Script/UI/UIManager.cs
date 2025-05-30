@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
 
     private void RegisterAllPanels()
     {
+        Debug.Log("Registering all panels...");
         PanelBase[] panels = FindObjectsOfType<PanelBase>(true);
         panelMap.Clear();
         foreach (var panel in panels)
