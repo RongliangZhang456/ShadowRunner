@@ -18,8 +18,10 @@ public class LevelSelectHandler : PanelBase
 <<<<<<< HEAD
         levelButtons[0].onClick.AddListener(() => UnityEngine.SceneManagement.SceneManager.LoadScene("TutorialScene"));
         //TODO: Replace with actual level names
-        // levelButtons[1].onClick.AddListener(() => UnityEngine.SceneManagement.SceneManager.LoadScene(""));
-        // levelButtons[2].onClick.AddListener(() => UnityEngine.SceneManagement.SceneManager.LoadScene(""));
+        levelButtons[1].onClick.AddListener(() =>
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Anti-gravity"));
+        levelButtons[2].onClick.AddListener(() =>
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Color-change"));
 
 
 =======
