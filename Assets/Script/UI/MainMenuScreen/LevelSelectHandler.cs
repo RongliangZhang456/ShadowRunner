@@ -21,8 +21,16 @@ public class LevelSelectHandler : PanelBase
             Time.timeScale = 1f;
         });
         //TODO: Replace with actual level names
-        // levelButtons[1].onClick.AddListener(() => UnityEngine.SceneManagement.SceneManager.LoadScene(""));
-        // levelButtons[2].onClick.AddListener(() => UnityEngine.SceneManagement.SceneManager.LoadScene(""));
+        levelButtons[1].onClick.AddListener(() =>
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Color-change");
+            GameStatsManager.Instance.ResetStats();
+            Time.timeScale = 1f;
+        });
+        levelButtons[2].onClick.AddListener(() =>
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Anti-gravity");
+        });
 
 
         backButton.onClick.AddListener(() =>
