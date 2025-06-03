@@ -57,7 +57,6 @@ public class LocalizationManager : MonoBehaviour
         {
             return value;
         }
-
         return key; // fallback: return key itself if not found
     }
 }

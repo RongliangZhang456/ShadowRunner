@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "ShadowRunner.sln"
+    "dotnet.defaultSolution": "UI2.sln"
 }

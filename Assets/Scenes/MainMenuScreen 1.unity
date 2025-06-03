@@ -552,6 +552,7 @@ MonoBehaviour:
   - {fileID: 2113368519}
   - {fileID: 195654654}
   - {fileID: 537126250}
+  optionsButton: {fileID: 0}
   backButton: {fileID: 897509952}
   levelSelectText: {fileID: 785846767}
   backButtonText: {fileID: 750952309}
@@ -1161,7 +1162,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3e6c818dd254a40bcbfb2201a014de8c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9b466b84db50ef34ea05f95f37e7d439, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3645,8 +3646,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3676,7 +3677,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playButton: {fileID: 2017706126}
-  settingsButton: {fileID: 695887931}
 --- !u!1 &2017706123
 GameObject:
   m_ObjectHideFlags: 0
