@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Anti-gravity.unity
     guid: 6300a34c170b8674596d7026ccc3200e
+  - enabled: 1
+    path: Assets/Scenes/YouWinScene.unity
+    guid: 2edc9257a86db42c4b606d5e29c18334
   m_configObjects: {}

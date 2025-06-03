@@ -16,17 +16,17 @@ public class PlayerController : MonoBehaviour
     public float baseGravity = -9.81f;
     public float gravityCooldown = 0.5f;
     public bool enableAirGravityFlip = false;
-	private Vector3 currentGravity;
+    private Vector3 currentGravity;
     private bool isGravityNormal = true;
     private float lastGravityFlipTime;
-	private bool isFlippedGravityInAir = false;
+    private bool isFlippedGravityInAir = false;
 
-	[Header("Color Settings")]
+    [Header("Color Settings")]
     public Renderer[] colorRenderers;
     public Material blackMat;
     public Material whiteMat;
     public bool isDefaultBlack = true;
-	[HideInInspector] public bool isCurrentBlack = true;
+    [HideInInspector] public bool isCurrentBlack = true;
 
     [Header("Animation Settings")]
     public string runState = "RunForward";
@@ -40,7 +40,10 @@ public class PlayerController : MonoBehaviour
     [Header("Death Settings")]
     public bool enableRespawnToStart = true;
 
-	[SerializeField] private Rigidbody rb;
+    [Header("Game States")]
+    public bool isGameOver = false;
+
+    [SerializeField] private Rigidbody rb;
     [SerializeField] private Collider col;
     [SerializeField] private Animator anim;
 
@@ -80,15 +83,15 @@ public class PlayerController : MonoBehaviour
 
         rb.useGravity = false;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-		currentGravity = new Vector3(0, baseGravity, 0);
+        currentGravity = new Vector3(0, baseGravity, 0);
 
-		PhysicMaterial mat = new PhysicMaterial();
+        PhysicMaterial mat = new PhysicMaterial();
         mat.dynamicFriction = 0;
         mat.staticFriction = 0;
         col.material = mat;
 
         InitializePlayerState();
-	}
+    }
 
     void FindColorRenderers()
     {
@@ -110,7 +113,7 @@ public class PlayerController : MonoBehaviour
 
         if (colorRenderers == null || colorRenderers.Length == 0)
         {
-            Debug.LogWarning("Î´ÕÒµ½ÐèÒª±äÉ«µÄäÖÈ¾Æ÷£¡ÇëÊÖ¶¯¸³Öµ»ò¼ì²éÄ£ÐÍ²ã¼¶");
+            Debug.LogWarning("Î´ï¿½Òµï¿½ï¿½ï¿½Òªï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½È¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½Ä£ï¿½Í²ã¼¶");
         }
     }
 
@@ -124,23 +127,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-	// Called when the game starts or when the player respawns
-	void InitializePlayerState()
-	{
-		transform.position = Vector3.zero;
-		rb.velocity = Vector3.zero;
-		rb.angularVelocity = Vector3.zero;
-		isGrounded = true;
-		isCurrentBlack = isDefaultBlack;
-		UpdateColorMaterial();
-		// Reset gravity
-		if (currentGravity.y * baseGravity < 0f)
-		{
-			ReverseGravity();
-		}
-	}
+    // Called when the game starts or when the player respawns
+    void InitializePlayerState()
+    {
+        transform.position = Vector3.zero;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        isGrounded = true;
+        isCurrentBlack = isDefaultBlack;
+        UpdateColorMaterial();
+        // Reset gravity
+        if (currentGravity.y * baseGravity < 0f)
+        {
+            ReverseGravity();
+        }
+    }
 
-	void Update()
+    void Update()
     {
         if (col == null) return;
 
@@ -223,11 +226,11 @@ public class PlayerController : MonoBehaviour
 
     void ReverseGravity()
     {
-		if (!enableAirGravityFlip)
-		{
-			if (isFlippedGravityInAir) return;
-		}
-		if (Time.time - lastGravityFlipTime < gravityCooldown) return;
+        if (!enableAirGravityFlip)
+        {
+            if (isFlippedGravityInAir) return;
+        }
+        if (Time.time - lastGravityFlipTime < gravityCooldown) return;
 
         Vector3 pivotPoint = GetPivotPosition();
 
@@ -243,8 +246,8 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, newYVelocity, rb.velocity.z);
 
         lastGravityFlipTime = Time.time;
-		isFlippedGravityInAir = true;
-	}
+        isFlippedGravityInAir = true;
+    }
 
     Vector3 GetPivotPosition()
     {
@@ -295,7 +298,7 @@ public class PlayerController : MonoBehaviour
         isCurrentBlack = !isCurrentBlack;
         UpdateColorMaterial();
 
-        // ÐÂÔö£ºÕ¾ÔÚÆ½Ì¨ÉÏ±äÉ«Ê±Á¢¼´¼ì²éÊ§°Ü
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½Æ½Ì¨ï¿½Ï±ï¿½É«Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½
         if (isGrounded && currentPlatform != null)
         {
             if ((currentPlatform.CompareTag("BlackBlock") && !isCurrentBlack) ||
@@ -334,7 +337,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                anim.Play(runState, 0, 0f); // ÐÂÔö£ºÈí×ÅÂ½Ò²ÇÐ»»»ØÅÜ²½
+                anim.Play(runState, 0, 0f); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â½Ò²ï¿½Ð»ï¿½ï¿½ï¿½ï¿½Ü²ï¿½
             }
         }
     }
@@ -383,11 +386,11 @@ public class PlayerController : MonoBehaviour
         if (enteringOrStaying)
         {
             isGrounded = isValidPlatform;
-			if (isGrounded)
-			{
-				isFlippedGravityInAir = false;
-			}
-		}
+            if (isGrounded)
+            {
+                isFlippedGravityInAir = false;
+            }
+        }
         else
         {
             isGrounded = false;
@@ -397,19 +400,20 @@ public class PlayerController : MonoBehaviour
 
     void TriggerFailure()
     {
-        Debug.Log("´¥Åö´íÎóÑÕÉ«£¡ÓÎÏ·½áÊø");
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½");
 
         if (enableRespawnToStart)
         {
             InitializePlayerState();
-		}
+        }
         else
         {
-            #if UNITY_EDITOR
-                        UnityEditor.EditorApplication.isPlaying = false;
-            #else
+#if UNITY_EDITOR
+            isGameOver = true;
+            // UnityEditor.EditorApplication.isPlaying = false;
+#else
                     Application.Quit();
-            #endif
+#endif
         }
     }
 
@@ -434,10 +438,10 @@ public class PlayerController : MonoBehaviour
 
         float cooldownLeft = Mathf.Max(0, gravityCooldown - (Time.time - lastGravityFlipTime));
 
-        GUI.Label(new Rect(10, 10, 300, 50), $"½ÓµØ×´Ì¬: {isGrounded}", style);
-        GUI.Label(new Rect(10, 40, 300, 50), $"ËÙ¶È: {rb.velocity}", style);
-        GUI.Label(new Rect(10, 70, 300, 50), $"ÖØÁ¦·½Ïò: {(isGravityNormal ? "Õý³£" : "·´×ª")}", style);
-        GUI.Label(new Rect(10, 100, 300, 50), $"·´ÖØÁ¦ÀäÈ´: {cooldownLeft:F1}s", style);
+        GUI.Label(new Rect(10, 10, 300, 50), $"ï¿½Óµï¿½×´Ì¬: {isGrounded}", style);
+        GUI.Label(new Rect(10, 40, 300, 50), $"ï¿½Ù¶ï¿½: {rb.velocity}", style);
+        GUI.Label(new Rect(10, 70, 300, 50), $"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: {(isGravityNormal ? "ï¿½ï¿½ï¿½ï¿½" : "ï¿½ï¿½×ª")}", style);
+        GUI.Label(new Rect(10, 100, 300, 50), $"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È´: {cooldownLeft:F1}s", style);
     }
 
     void OnDrawGizmosSelected()

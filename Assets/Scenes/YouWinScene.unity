@@ -290,7 +290,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -214.00003, y: 177}
+  m_AnchoredPosition: {x: -185.00003, y: 177}
   m_SizeDelta: {x: -502.4467, y: -393.4964}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &313384713
@@ -313,7 +313,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: GameOver
+  m_text: ' You Win'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 690b310f884ad4f41bb1addd16f04199, type: 2}
   m_sharedMaterial: {fileID: -7276707338342032257, guid: 690b310f884ad4f41bb1addd16f04199, type: 2}
@@ -401,7 +401,7 @@ GameObject:
   - component: {fileID: 384785289}
   - component: {fileID: 384785290}
   m_Layer: 5
-  m_Name: GameOverManager
+  m_Name: YouWinManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
