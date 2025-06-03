@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 
 [RequireComponent(typeof(Rigidbody)), RequireComponent(typeof(Collider)), RequireComponent(typeof(Animator))]
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Death Settings")]
     public bool enableRespawnToStart = true;
+    public Camera mainCamera;
 
 	[SerializeField] private Rigidbody rb;
     [SerializeField] private Collider col;
@@ -87,7 +89,7 @@ public class PlayerController : MonoBehaviour
         mat.staticFriction = 0;
         col.material = mat;
 
-        InitializePlayerState();
+		InitializePlayerState();
 	}
 
     void FindColorRenderers()
@@ -154,7 +156,34 @@ public class PlayerController : MonoBehaviour
 
         shouldHardLand = rb.velocity.y < hardLandingSpeedThreshold;
         anim.SetBool(hardLandingHash, shouldHardLand);
-    }
+
+		CheckPlayerOutOfBound();
+	}
+
+    void CheckPlayerOutOfBound()
+    {
+		// Initialize model bounds by computing the bounds of all child renderers
+		Bounds modelBounds = new Bounds(transform.position, Vector3.zero);
+		foreach (Renderer r in GetComponentsInChildren<Renderer>())
+		{
+			modelBounds.Encapsulate(r.bounds);
+		}
+        modelBounds.extents += new Vector3(2f, 2f, 2f); // Add some padding to the bounds
+
+		Vector3 min = mainCamera.WorldToViewportPoint(modelBounds.min);
+		Vector3 max = mainCamera.WorldToViewportPoint(modelBounds.max);
+
+		// Check if the player is out of bounds completely
+		bool outLeft = max.x < 0;
+		bool outRight = min.x > 1;
+		bool outBottom = max.y < 0;
+		bool outTop = min.y > 1;
+
+		if (outLeft || outRight || outBottom || outTop)
+		{
+			TriggerFailure();
+		}
+	}
 
     void UpdateActionLockStatus()
     {
@@ -397,8 +426,6 @@ public class PlayerController : MonoBehaviour
 
     void TriggerFailure()
     {
-        Debug.Log("´¥Åö´íÎóÑÕÉ«£¡ÓÎÏ·½áÊø");
-
         if (enableRespawnToStart)
         {
             InitializePlayerState();
