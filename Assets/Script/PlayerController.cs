@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 
 [RequireComponent(typeof(Rigidbody)), RequireComponent(typeof(Collider)), RequireComponent(typeof(Animator))]
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Death Settings")]
     public bool enableRespawnToStart = true;
+    public Camera mainCamera;
 
     [Header("Game States")]
     public bool isGameOver = false;
@@ -90,8 +92,8 @@ public class PlayerController : MonoBehaviour
         mat.staticFriction = 0;
         col.material = mat;
 
-        InitializePlayerState();
-    }
+		InitializePlayerState();
+	}
 
     void FindColorRenderers()
     {
@@ -113,7 +115,7 @@ public class PlayerController : MonoBehaviour
 
         if (colorRenderers == null || colorRenderers.Length == 0)
         {
-            Debug.LogWarning("δ�ҵ���Ҫ��ɫ����Ⱦ�������ֶ���ֵ����ģ�Ͳ㼶");
+            Debug.LogWarning("未找到需要变色的渲染器！请手动赋值或检查模型层级");
         }
     }
 
@@ -157,7 +159,34 @@ public class PlayerController : MonoBehaviour
 
         shouldHardLand = rb.velocity.y < hardLandingSpeedThreshold;
         anim.SetBool(hardLandingHash, shouldHardLand);
-    }
+
+		CheckPlayerOutOfBound();
+	}
+
+    void CheckPlayerOutOfBound()
+    {
+		// Initialize model bounds by computing the bounds of all child renderers
+		Bounds modelBounds = new Bounds(transform.position, Vector3.zero);
+		foreach (Renderer r in GetComponentsInChildren<Renderer>())
+		{
+			modelBounds.Encapsulate(r.bounds);
+		}
+        modelBounds.extents += new Vector3(2f, 2f, 2f); // Add some padding to the bounds
+
+		Vector3 min = mainCamera.WorldToViewportPoint(modelBounds.min);
+		Vector3 max = mainCamera.WorldToViewportPoint(modelBounds.max);
+
+		// Check if the player is out of bounds completely
+		bool outLeft = max.x < 0;
+		bool outRight = min.x > 1;
+		bool outBottom = max.y < 0;
+		bool outTop = min.y > 1;
+
+		if (outLeft || outRight || outBottom || outTop)
+		{
+			TriggerFailure();
+		}
+	}
 
     void UpdateActionLockStatus()
     {
@@ -298,7 +327,7 @@ public class PlayerController : MonoBehaviour
         isCurrentBlack = !isCurrentBlack;
         UpdateColorMaterial();
 
-        // ������վ��ƽ̨�ϱ�ɫʱ�������ʧ��
+        // 新增：站在平台上变色时立即检查失败
         if (isGrounded && currentPlatform != null)
         {
             if ((currentPlatform.CompareTag("BlackBlock") && !isCurrentBlack) ||
@@ -337,7 +366,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                anim.Play(runState, 0, 0f); // ����������½Ҳ�л����ܲ�
+                anim.Play(runState, 0, 0f); // 新增：软着陆也切换回跑步
             }
         }
     }
@@ -400,8 +429,6 @@ public class PlayerController : MonoBehaviour
 
     void TriggerFailure()
     {
-        Debug.Log("����������ɫ����Ϸ����");
-
         if (enableRespawnToStart)
         {
             InitializePlayerState();
@@ -438,10 +465,10 @@ public class PlayerController : MonoBehaviour
 
         float cooldownLeft = Mathf.Max(0, gravityCooldown - (Time.time - lastGravityFlipTime));
 
-        GUI.Label(new Rect(10, 10, 300, 50), $"�ӵ�״̬: {isGrounded}", style);
-        GUI.Label(new Rect(10, 40, 300, 50), $"�ٶ�: {rb.velocity}", style);
-        GUI.Label(new Rect(10, 70, 300, 50), $"��������: {(isGravityNormal ? "����" : "��ת")}", style);
-        GUI.Label(new Rect(10, 100, 300, 50), $"��������ȴ: {cooldownLeft:F1}s", style);
+        GUI.Label(new Rect(10, 10, 300, 50), $"接地状态: {isGrounded}", style);
+        GUI.Label(new Rect(10, 40, 300, 50), $"速度: {rb.velocity}", style);
+        GUI.Label(new Rect(10, 70, 300, 50), $"重力方向: {(isGravityNormal ? "正常" : "反转")}", style);
+        GUI.Label(new Rect(10, 100, 300, 50), $"反重力冷却: {cooldownLeft:F1}s", style);
     }
 
     void OnDrawGizmosSelected()
