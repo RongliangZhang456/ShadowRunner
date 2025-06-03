@@ -61,6 +61,8 @@ public class PlayerController : MonoBehaviour
 
     private GameObject currentPlatform;
 
+    private PlayerSound playerSound;
+
     void Awake()
     {
         if (rb == null) rb = GetComponent<Rigidbody>();
@@ -86,6 +88,7 @@ public class PlayerController : MonoBehaviour
         currentGravity = new Vector3(0, baseGravity, 0);
 
         PhysicMaterial mat = new PhysicMaterial();
+        playerSound = GetComponent<PlayerSound>();
         mat.dynamicFriction = 0;
         mat.staticFriction = 0;
         col.material = mat;
@@ -210,6 +213,9 @@ public class PlayerController : MonoBehaviour
             float direction = isGravityNormal ? 1f : -1f;
             rb.AddForce(Vector3.up * jumpForce * direction, ForceMode.Impulse);
             anim.SetTrigger(jumpTriggerHash);
+
+            // 播放跳跃音效
+            if (playerSound != null) playerSound.PlayJumpSound();
         }
 
         if (flipGravityPressed)
@@ -247,6 +253,9 @@ public class PlayerController : MonoBehaviour
 
         lastGravityFlipTime = Time.time;
         isFlippedGravityInAir = true;
+
+        // 播放重力翻转音效
+        if (playerSound != null) playerSound.PlayGravityFlipSound();
     }
 
     Vector3 GetPivotPosition()
@@ -298,6 +307,10 @@ public class PlayerController : MonoBehaviour
         isCurrentBlack = !isCurrentBlack;
         UpdateColorMaterial();
 
+        // 播放颜色切换音效
+        if (playerSound != null) playerSound.PlayColorChangeSound();
+
+
         // ������վ��ƽ̨�ϱ�ɫʱ�������ʧ��
         if (isGrounded && currentPlatform != null)
         {
@@ -305,8 +318,10 @@ public class PlayerController : MonoBehaviour
                 (currentPlatform.CompareTag("WhiteBlock") && isCurrentBlack))
             {
                 TriggerFailure();
+
             }
         }
+
     }
 
     void UpdateColorMaterial()
@@ -409,6 +424,7 @@ public class PlayerController : MonoBehaviour
         else
         {
 #if UNITY_EDITOR
+            if (playerSound != null) playerSound.PlaySplashSound();
             isGameOver = true;
             // UnityEditor.EditorApplication.isPlaying = false;
 #else

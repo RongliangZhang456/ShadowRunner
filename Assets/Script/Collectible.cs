@@ -23,12 +23,18 @@ public class Collectible : MonoBehaviour
         {
             Debug.Log("collusion");
 
+            if (onControllerEffect != null)
+                Instantiate(onControllerEffect, transform.position, transform.rotation);
+            else
+                Debug.LogWarning("onControllerEffect is null!");
+
+            if (GameStatsManager.Instance != null)
+                GameStatsManager.Instance.AddStar();
+            else
+                Debug.LogWarning("GameStatsManager.Instance is null!");
+
             // Destroy the Collectible
             Destroy(gameObject);
-
-            // Instance the particle effect
-            Instantiate(onControllerEffect, transform.position, transform.rotation);
-            GameStatsManager.Instance.AddStar();
         }
     }
 }
