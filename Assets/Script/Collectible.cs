@@ -23,6 +23,13 @@ public class Collectible : MonoBehaviour
         {
             Debug.Log("collusion");
 
+            // 播放收集音效
+            PlayerSound sound = other.GetComponent<PlayerSound>();
+            if (sound != null)
+            {
+                sound.PlayCollectItemSound();
+            }
+
             if (onControllerEffect != null)
                 Instantiate(onControllerEffect, transform.position, transform.rotation);
             else

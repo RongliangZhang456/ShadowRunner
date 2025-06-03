@@ -444,6 +444,14 @@ public class PlayerController : MonoBehaviour
 
     void TriggerFailure()
     {
+
+        // 播放失败音效
+        if (playerSound != null)
+        {
+            playerSound.PlayGameOverSound();
+        }
+
+
         if (enableRespawnToStart)
         {
             InitializePlayerState();

@@ -12,6 +12,12 @@ public class BackGroundHandler : PanelBase
 
     private void Start()
     {
+
+        // ²¥·ÅÖ÷²Ëµ¥±³¾°ÒôÀÖ
+        if (BGMManager.Instance != null)
+        {
+            BGMManager.Instance.PlayMenuBGM();
+        }
         settingsButton.onClick.AddListener(() =>
         {
             UIManager.Instance.ShowPanel("LanguageSelect");

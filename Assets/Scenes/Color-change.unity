@@ -409,50 +409,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb5a2fb7ff15c4241921d154a3399916, type: 3}
---- !u!1 &121352054
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 121352055}
-  - component: {fileID: 121352056}
-  m_Layer: 0
-  m_Name: WaterFixer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &121352055
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 121352054}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 119.734436, y: 5.0212817, z: -0.23716915}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &121352056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 121352054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: faeee5186d13f6c449343e185a24b75f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &144965534 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4192295222383489515, guid: cb5a2fb7ff15c4241921d154a3399916, type: 3}
@@ -1579,6 +1535,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3360304956169910225, guid: 36fe50638a65309499bbbb68645b2e1e, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360304956169910225, guid: 36fe50638a65309499bbbb68645b2e1e, type: 3}
       propertyPath: isDefaultBlack
       value: 1
       objectReference: {fileID: 0}
@@ -1588,7 +1548,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3360304956169910225, guid: 36fe50638a65309499bbbb68645b2e1e, type: 3}
       propertyPath: enableRespawnToStart
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6291,6 +6251,9 @@ MonoBehaviour:
   splashClip: {fileID: 8300000, guid: 3646018c72e5a5348a68930e8546c4b9, type: 3}
   colorChangeClip: {fileID: 8300000, guid: c22ccb40995ea9148baf29f30dee831d, type: 3}
   gravityFlipClip: {fileID: 8300000, guid: 5e790a5e10e5f814785435ee2581b20f, type: 3}
+  gameOverClip: {fileID: 8300000, guid: 5fe4e4eab7728f246aa9a0ffb14ad251, type: 3}
+  levelCompleteClip: {fileID: 8300000, guid: 6f9dc829048c8d44fb87792a2f52455f, type: 3}
+  collectItemClip: {fileID: 8300000, guid: 14a537ff1e5dfb5458176d302b007edd, type: 3}
 --- !u!82 &2003653583
 AudioSource:
   m_ObjectHideFlags: 0
@@ -7439,4 +7402,3 @@ SceneRoots:
   - {fileID: 447496551}
   - {fileID: 588125327}
   - {fileID: 1105473158}
-  - {fileID: 121352055}
