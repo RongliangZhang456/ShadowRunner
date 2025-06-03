@@ -1046,11 +1046,12 @@ MonoBehaviour:
   gravityMultiplier: 2
   baseGravity: -9.81
   gravityCooldown: 0
-  canFlipGravityInAir: 1
+  enableAirGravityFlip: 1
   colorRenderers: []
   blackMat: {fileID: 2100000, guid: c85071ee3fb4ba54b9b0f83e34922d15, type: 2}
   whiteMat: {fileID: 2100000, guid: 683ed3164a67d5248831fc3b2ceadc03, type: 2}
-  isBlack: 1
+  isDefaultBlack: 1
+  isCurrentBlack: 1
   runState: RunForward
   jumpUpState: JumpWhileRunningUp
   fallState: FallingLoop
@@ -1058,6 +1059,8 @@ MonoBehaviour:
   rollState: RollForward
   sprintThreshold: 2
   hardLandingSpeedThreshold: -5
+  enableRespawnToStart: 1
+  mainCamera: {fileID: 0}
   rb: {fileID: 0}
   col: {fileID: 0}
   anim: {fileID: 0}
