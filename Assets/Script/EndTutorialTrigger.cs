@@ -5,14 +5,12 @@ using UnityEngine;
 
 public class EndTutorialTrigger : MonoBehaviour
 {
-    public GameObject endScreen; // ÍÏ×§¸³Öµ
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Time.timeScale = 0f; // ÔİÍ£ÓÎÏ·
-            endScreen.SetActive(true); // ÏÔÊ¾½áÊøUI
+            Time.timeScale = 0f; // ï¿½ï¿½Í£ï¿½ï¿½Ï·
+            UnityEngine.SceneManagement.SceneManager.LoadScene("YouWinScene");
         }
     }
 }
