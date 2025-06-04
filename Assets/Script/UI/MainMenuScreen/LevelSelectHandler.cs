@@ -30,6 +30,8 @@ public class LevelSelectHandler : PanelBase
         levelButtons[2].onClick.AddListener(() =>
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene("Anti-gravity");
+            GameStatsManager.Instance.ResetStats();
+            Time.timeScale = 1f;
         });
 
 
