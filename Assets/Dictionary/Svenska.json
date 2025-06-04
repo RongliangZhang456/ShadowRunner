@@ -15,6 +15,16 @@
 
     { "key": "Press Controller A to jump", "value": "Tryck på kontroll A för att hoppa" },
     { "key": "Press RB to switch colours", "value": "Tryck på RB för att byta färger" },
-    { "key": "Press LB to reverse gravity", "value": "Tryck på LB för att vända gravitationen" }
+    { "key": "Press LB to reverse gravity", "value": "Tryck på LB för att vända gravitationen" },
+
+
+    { "key": "pause", "value": "PAUS"},
+    { "key": "resume", "value": "Fortsätt" },
+    { "key": "restart", "value": "STARTA OM" },
+    { "key": "quit", "value": "AVSLUTA" },
+    { "key": "home", "value": "HEM" },
+    { "key": "try again?", "value": "IGEN?"},
+    { "key": "restart", "value": "STARTA OM" },
+    { "key": "quit", "value": "AVSLUTA" }
   ]
 }

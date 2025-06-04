@@ -172,6 +172,7 @@ MonoBehaviour:
   QuitButton: {fileID: 1890162090}
   RestartText: {fileID: 1857167836}
   QuitText: {fileID: 331830566}
+  TryagainText: {fileID: 767520452}
 --- !u!4 &15686069 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4192295222383489515, guid: 354517a8ea578254982f402c93345885, type: 3}
@@ -981,7 +982,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Press LeftShift to reverse gravity!
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 690b310f884ad4f41bb1addd16f04199, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
   m_sharedMaterial: {fileID: -7276707338342032257, guid: 690b310f884ad4f41bb1addd16f04199, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -989,7 +990,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4282466815
-  m_fontColor: {r: 1, g: 0.25471687, b: 0.25471687, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1045,7 +1046,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &239330827
@@ -2101,6 +2102,7 @@ MonoBehaviour:
   RestartText: {fileID: 856037118}
   QuitText: {fileID: 1889561476}
   HomeText: {fileID: 915555884}
+  PauseText: {fileID: 1608518872}
 --- !u!4 &573038724 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8771972552311404736, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}

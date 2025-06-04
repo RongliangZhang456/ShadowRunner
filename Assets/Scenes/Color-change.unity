@@ -1548,7 +1548,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3360304956169910225, guid: 36fe50638a65309499bbbb68645b2e1e, type: 3}
       propertyPath: enableRespawnToStart
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3242,6 +3242,7 @@ MonoBehaviour:
   RestartText: {fileID: 2010364179}
   QuitText: {fileID: 2127225616}
   HomeText: {fileID: 587288816}
+  PauseText: {fileID: 705352878}
 --- !u!4 &1176311261
 Transform:
   m_ObjectHideFlags: 0
@@ -6976,6 +6977,7 @@ MonoBehaviour:
   QuitButton: {fileID: 1550925936}
   RestartText: {fileID: 458504476}
   QuitText: {fileID: 2017805530}
+  TryagainText: {fileID: 1334017433}
 --- !u!4 &2118676290
 Transform:
   m_ObjectHideFlags: 0

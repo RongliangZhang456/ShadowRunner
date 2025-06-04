@@ -15,6 +15,15 @@
 
     { "key": "Press Controller A to jump", "value": "Press Controller A to jump" },
     { "key": "Press RB to switch colours", "value": "Press RB to switch colours" },
-    { "key": "Press LB to reverse gravity", "value": "Press LB to reverse gravity" }
+    { "key": "Press LB to reverse gravity", "value": "Press LB to reverse gravity" },
+
+    { "key": "pause", "value":"PAUSE" },
+    { "key": "resume", "value": "RESUME" },
+    { "key": "restart", "value": "RESTART" },
+    { "key": "quit", "value": "QUIT" },
+    { "key": "home", "value": "HOME" },
+    { "key": "try again?", "value": "TRY AGAIN?" },
+    { "key": "restart", "value": "RESTART" },
+    { "key": "quit", "value": "QUIT" }
   ]
 }

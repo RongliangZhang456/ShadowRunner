@@ -8,13 +8,16 @@ public class TryAgainManager : PanelBase
 {
     public GameObject TryAgainPanel, Player;
     public Button RestartButton, QuitButton;
-    public Text RestartText, QuitText;
+    public Text RestartText, QuitText, TryagainText;
 
     void Start()
     {
         TryAgainPanel.SetActive(false);
         RestartButton.onClick.AddListener(RestartScene);
         QuitButton.onClick.AddListener(QuitGame);
+        RestartText.text = LocalizationManager.Get("restart");
+        QuitText.text = LocalizationManager.Get("quit");
+        TryagainText.text = LocalizationManager.Get("try again?");
     }
 
     void Update()

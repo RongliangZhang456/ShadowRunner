@@ -6,7 +6,7 @@ public class PauseManager : PanelBase
 {
     public GameObject PausePanel;
     public Button ResumeButton, RestartButton, QuitButton, HomeButton;
-    public Text ResumeText, RestartText, QuitText, HomeText;
+    public Text ResumeText, RestartText, QuitText, HomeText, PauseText;
     private bool isPaused = false;
 
     private void Start()
@@ -17,6 +17,7 @@ public class PauseManager : PanelBase
         RestartButton.onClick.AddListener(RestartScene);
         QuitButton.onClick.AddListener(QuitGame);
         HomeButton.onClick.AddListener(GoToHome);
+        PauseText.text = LocalizationManager.Get("pause");
         ResumeText.text = LocalizationManager.Get("resume");
         RestartText.text = LocalizationManager.Get("restart");
         QuitText.text = LocalizationManager.Get("quit");

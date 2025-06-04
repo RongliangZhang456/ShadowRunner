@@ -28,10 +28,10 @@ public class GameOverHandler : MonoBehaviour
 
     void OnEnable()
     {
-        //Todo: update counts elements
-        timeSurvivedText.text = LocalizationManager.Get("time survived");
-        restartText.text = LocalizationManager.Get("restart count");
-        starsCollectedText.text = LocalizationManager.Get("stars collected");
+        //Todo: fix swedish error
+        // timeSurvivedText.text = LocalizationManager.Get("time survived");
+        // restartText.text = LocalizationManager.Get("restart count");
+        // starsCollectedText.text = LocalizationManager.Get("stars collected");
         if (GameStatsManager.Instance != null)
         {
             timeSurvivedCountText.text = $"{GameStatsManager.Instance.playTime:F2} sec";
