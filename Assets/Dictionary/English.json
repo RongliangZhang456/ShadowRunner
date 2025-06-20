@@ -24,6 +24,8 @@
     { "key": "home", "value": "HOME" },
     { "key": "try again?", "value": "TRY AGAIN?" },
     { "key": "restart", "value": "RESTART" },
-    { "key": "quit", "value": "QUIT" }
+    { "key": "quit", "value": "QUIT" },
+
+    { "key": "press enter button", "value": "press enter button" }
   ]
 }

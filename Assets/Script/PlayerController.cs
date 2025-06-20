@@ -168,8 +168,10 @@ public class PlayerController : MonoBehaviour
 
     void CheckPlayerOutOfBound()
     {
-        // Initialize model bounds by computing the bounds of all child renderers
-        Bounds modelBounds = new Bounds(transform.position, Vector3.zero);
+        if (mainCamera == null) return;
+
+		// Initialize model bounds by computing the bounds of all child renderers
+		Bounds modelBounds = new Bounds(transform.position, Vector3.zero);
         foreach (Renderer r in GetComponentsInChildren<Renderer>())
         {
             modelBounds.Encapsulate(r.bounds);
@@ -483,7 +485,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnGUI()
+/*    void OnGUI()
     {
         GUIStyle style = new GUIStyle();
         style.fontSize = 20;
@@ -495,7 +497,7 @@ public class PlayerController : MonoBehaviour
         GUI.Label(new Rect(10, 40, 300, 50), $"速度: {rb.velocity}", style);
         GUI.Label(new Rect(10, 70, 300, 50), $"重力方向: {(isGravityNormal ? "正常" : "反转")}", style);
         GUI.Label(new Rect(10, 100, 300, 50), $"反重力冷却: {cooldownLeft:F1}s", style);
-    }
+    }*/
 
     void OnDrawGizmosSelected()
     {

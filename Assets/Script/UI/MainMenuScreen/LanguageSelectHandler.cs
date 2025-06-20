@@ -10,6 +10,7 @@ public class LanguageSelectHandler : PanelBase
     public Text languageText;
     public Text dropDownText;
     public Text backButtonText;
+    public Text playButtonText;
 
     public override string PanelID => "LanguageSelect";
 
@@ -24,6 +25,7 @@ public class LanguageSelectHandler : PanelBase
             optionsText.text = LocalizationManager.Get("options");
             languageText.text = LocalizationManager.Get("language");
             backButtonText.text = LocalizationManager.Get("back");
+            playButtonText.text = LocalizationManager.Get("press enter button");
         });
 
         backButton.onClick.AddListener(() =>

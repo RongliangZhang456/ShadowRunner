@@ -96,8 +96,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 62c50b59bded9354c890a737250d5e46, type: 2}
-  m_LightingSettings: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 85aea601d23405543a2129136772773f, type: 2}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 1041646aba3fd1e4d962cfad7939e9c4, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -847,7 +847,7 @@ PrefabInstance:
       objectReference: {fileID: 2099535963}
     - target: {fileID: 3360304956169910225, guid: 36fe50638a65309499bbbb68645b2e1e, type: 3}
       propertyPath: enableAirGravityFlip
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3360304956169910225, guid: 36fe50638a65309499bbbb68645b2e1e, type: 3}
       propertyPath: enableRespawnToStart
@@ -3459,7 +3459,7 @@ Transform:
   m_GameObject: {fileID: 1438620758}
   serializedVersion: 2
   m_LocalRotation: {x: 0.08052145, y: 0.3812272, z: -0.033353075, w: 0.9203639}
-  m_LocalPosition: {x: 0.59249043, y: -0.12527442, z: -0.34561348}
+  m_LocalPosition: {x: 0.59333825, y: -0.12527442, z: -0.3464613}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4142,7 +4142,7 @@ Transform:
   m_GameObject: {fileID: 2099535958}
   serializedVersion: 2
   m_LocalRotation: {x: 0.08052145, y: 0.3812272, z: -0.033353075, w: 0.9203639}
-  m_LocalPosition: {x: 0.59249043, y: -0.12527442, z: -0.34561348}
+  m_LocalPosition: {x: 0.59333825, y: -0.12527442, z: -0.3464613}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

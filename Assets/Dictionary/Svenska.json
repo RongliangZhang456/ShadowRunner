@@ -17,7 +17,6 @@
     { "key": "Press RB to switch colours", "value": "Tryck på RB för att byta färger" },
     { "key": "Press LB to reverse gravity", "value": "Tryck på LB för att vända gravitationen" },
 
-
     { "key": "pause", "value": "PAUS"},
     { "key": "resume", "value": "Fortsätt" },
     { "key": "restart", "value": "STARTA OM" },
@@ -25,6 +24,8 @@
     { "key": "home", "value": "HEM" },
     { "key": "try again?", "value": "IGEN?"},
     { "key": "restart", "value": "STARTA OM" },
-    { "key": "quit", "value": "AVSLUTA" }
+    { "key": "quit", "value": "AVSLUTA" },
+
+    { "key": "press enter button", "value": "tryck på Enter-knappen" }
   ]
 }
