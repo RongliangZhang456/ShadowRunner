@@ -5,8 +5,8 @@ public class RestartGame : MonoBehaviour
 {
     public void Restart()
     {
-        Debug.Log("Restarting Game..."); // �����־
-        Time.timeScale = 1f; // �ָ�ʱ��
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // ���¼��ص�ǰ����
-    }
+        Debug.Log("Restarting Game..."); // Log restart
+		Time.timeScale = 1f; // Restore time
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reload current scene
+	}
 }

@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class GravityTutorialTrigger : MonoBehaviour
 {
-    public TutorialManager tutorialManager; // 拖拽赋值
+    public TutorialManager tutorialManager; // Assign via drag and drop
 
-    private void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             tutorialManager.StartTutorial("Gravity");
-            Destroy(gameObject); // 触发后销毁
-        }
+            Destroy(gameObject); // Destroy after triggering
+		}
     }
 }

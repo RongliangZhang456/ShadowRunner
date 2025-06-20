@@ -10,22 +10,22 @@ public class WaterFixer : MonoBehaviour
 
     System.Collections.IEnumerator ResetCameraRenderTarget()
     {
-        yield return null; // 等待一帧确保相机初始化完成
+        yield return null; // Wait one frame to ensure the camera is initialized
 
-        Camera cam = Camera.main;
+		Camera cam = Camera.main;
         if (cam != null)
         {
             RenderTexture tempRT = new RenderTexture(Screen.width, Screen.height, 24);
             cam.targetTexture = tempRT;
 
-            yield return null; // 再等一帧，确保渲染器感知变化
+            yield return null; // Wait another frame to ensure the renderer detects the change
 
-            cam.targetTexture = null; // 恢复默认渲染目标
-            Debug.Log(" 相机渲染目标已重置，触发渲染器刷新");
+			cam.targetTexture = null; // Restore the default render target
+			Debug.Log("Camera render target has been reset, renderer refresh triggered");
         }
         else
         {
-            Debug.LogWarning(" 没有找到 Main Camera");
+            Debug.LogWarning("Main Camera not found");
         }
     }
 }

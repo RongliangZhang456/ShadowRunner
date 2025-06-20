@@ -10,9 +10,9 @@ public class TutorialManager : MonoBehaviour, PlayerControls.IGameplayActions
     private PlayerControls controls;
     private string currentTutorial = "";
 
-    private InputDevice lastUsedDevice = null; // 记录最后使用的设备
+    private InputDevice lastUsedDevice = null; // Record the last used device
 
-    void Awake()
+	void Awake()
     {
         controls = new PlayerControls();
         controls.Gameplay.SetCallbacks(this);
@@ -26,8 +26,8 @@ public class TutorialManager : MonoBehaviour, PlayerControls.IGameplayActions
         controls.Gameplay.Disable();
     }
 
-    // 开始教程，启动慢动作，显示提示
-    public void StartTutorial(string type)
+	// Start the tutorial, enable slow motion, and show the hint
+	public void StartTutorial(string type)
     {
         currentTutorial = type;
         UpdateHintText();
@@ -36,8 +36,8 @@ public class TutorialManager : MonoBehaviour, PlayerControls.IGameplayActions
         hintText.gameObject.SetActive(true);
     }
 
-    // 更新提示文本，支持多语言和手柄/键盘切换
-    void UpdateHintText()
+	// Update the hint text, support multiple languages and gamepad/keyboard switching
+	void UpdateHintText()
     {
         bool isGamepad = IsCurrentDeviceGamepad();
 
@@ -69,8 +69,8 @@ public class TutorialManager : MonoBehaviour, PlayerControls.IGameplayActions
         return lastUsedDevice is Gamepad;
     }
 
-    // 退出教程，恢复正常时间，隐藏提示
-    void ExitTutorial()
+	// Exit the tutorial, restore normal time, and hide the hint
+	void ExitTutorial()
     {
         Time.timeScale = 1f;
         hintText.gameObject.SetActive(false);
@@ -78,9 +78,8 @@ public class TutorialManager : MonoBehaviour, PlayerControls.IGameplayActions
         lastUsedDevice = null;
     }
 
-    // 实现接口回调
-
-    public void OnJump(InputAction.CallbackContext context)
+	// Implement interface callbacks
+	public void OnJump(InputAction.CallbackContext context)
     {
         if (Time.timeScale < 1f && currentTutorial == "Jump" && context.performed)
             ExitTutorial();
@@ -109,8 +108,8 @@ public class TutorialManager : MonoBehaviour, PlayerControls.IGameplayActions
         UpdateLastUsedDevice(context);
     }
 
-    // 辅助方法：更新最后使用的设备并刷新提示
-    private void UpdateLastUsedDevice(InputAction.CallbackContext context)
+	// Helper method: update the last used device and refresh the hint
+	private void UpdateLastUsedDevice(InputAction.CallbackContext context)
     {
         if (context.control != null)
         {

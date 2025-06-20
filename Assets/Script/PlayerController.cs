@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
         if (colorRenderers == null || colorRenderers.Length == 0)
         {
-            Debug.LogWarning("未找到需要变色的渲染器！请手动赋值或检查模型层级");
+            Debug.LogWarning("No color-changing renderer found! Please assign manually or check the model hierarchy");
         }
     }
 
@@ -245,8 +245,8 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce * direction, ForceMode.Impulse);
             anim.SetTrigger(jumpTriggerHash);
 
-            // 播放跳跃音效
-            if (playerSound != null) playerSound.PlayJumpSound();
+			// Play jump sound effect
+			if (playerSound != null) playerSound.PlayJumpSound();
         }
 
         if (flipGravityPressed)
@@ -285,8 +285,8 @@ public class PlayerController : MonoBehaviour
         lastGravityFlipTime = Time.time;
         isFlippedGravityInAir = true;
 
-        // 播放重力翻转音效
-        if (playerSound != null) playerSound.PlayGravityFlipSound();
+		// Play gravity flip sound effect
+		if (playerSound != null) playerSound.PlayGravityFlipSound();
     }
 
     Vector3 GetPivotPosition()
@@ -338,12 +338,12 @@ public class PlayerController : MonoBehaviour
         isCurrentBlack = !isCurrentBlack;
         UpdateColorMaterial();
 
-        // 播放颜色切换音效
-        if (playerSound != null) playerSound.PlayColorChangeSound();
+		// Play color change sound effect
+		if (playerSound != null) playerSound.PlayColorChangeSound();
 
 
-        // ������վ��ƽ̨�ϱ�ɫʱ�������ʧ��
-        if (isGrounded && currentPlatform != null)
+		// If standing on the wrong color platform, trigger failure
+		if (isGrounded && currentPlatform != null)
         {
             if ((currentPlatform.CompareTag("BlackBlock") && !isCurrentBlack) ||
                 (currentPlatform.CompareTag("WhiteBlock") && isCurrentBlack))
@@ -383,8 +383,8 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                anim.Play(runState, 0, 0f); // 新增：软着陆也切换回跑步
-            }
+                anim.Play(runState, 0, 0f); // New: Switch back to running even on soft landing
+			}
         }
     }
 
@@ -447,8 +447,8 @@ public class PlayerController : MonoBehaviour
     void TriggerFailure()
     {
 
-        // 播放失败音效
-        if (playerSound != null)
+		// Play failure sound effect
+		if (playerSound != null)
         {
             playerSound.PlayGameOverSound();
         }
@@ -485,7 +485,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-/*    void OnGUI()
+/*
+ * Debug function
+ * void OnGUI()
     {
         GUIStyle style = new GUIStyle();
         style.fontSize = 20;
@@ -497,7 +499,8 @@ public class PlayerController : MonoBehaviour
         GUI.Label(new Rect(10, 40, 300, 50), $"速度: {rb.velocity}", style);
         GUI.Label(new Rect(10, 70, 300, 50), $"重力方向: {(isGravityNormal ? "正常" : "反转")}", style);
         GUI.Label(new Rect(10, 100, 300, 50), $"反重力冷却: {cooldownLeft:F1}s", style);
-    }*/
+    }
+*/
 
     void OnDrawGizmosSelected()
     {

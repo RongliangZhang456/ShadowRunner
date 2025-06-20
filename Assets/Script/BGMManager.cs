@@ -17,12 +17,12 @@ public class BGMManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // 跨场景不销毁
-        }
+            DontDestroyOnLoad(gameObject); // Do not destroy on scene load
+		}
         else
         {
-            Destroy(gameObject); // 防止重复
-        }
+            Destroy(gameObject); // Prevent duplicates
+		}
     }
 
     public void PlayMenuBGM()

@@ -23,8 +23,8 @@ public class Collectible : MonoBehaviour
         {
             Debug.Log("collusion");
 
-            // 播放收集音效
-            PlayerSound sound = other.GetComponent<PlayerSound>();
+			// Play collection sound effect
+			PlayerSound sound = other.GetComponent<PlayerSound>();
             if (sound != null)
             {
                 sound.PlayCollectItemSound();

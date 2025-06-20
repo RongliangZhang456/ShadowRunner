@@ -13,8 +13,8 @@ public class BackGroundHandler : PanelBase
     private void Start()
     {
 
-        // ≤•∑≈÷˜≤Àµ•±≥æ∞“Ù¿÷
-        if (BGMManager.Instance != null)
+		// Play main menu background music
+		if (BGMManager.Instance != null)
         {
             BGMManager.Instance.PlayMenuBGM();
         }

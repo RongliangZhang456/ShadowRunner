@@ -9,8 +9,8 @@ public class EndTutorialTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Time.timeScale = 0f; // ��ͣ��Ϸ
-            UnityEngine.SceneManagement.SceneManager.LoadScene("YouWinScene");
+            Time.timeScale = 0f; // Pause the game
+			UnityEngine.SceneManagement.SceneManager.LoadScene("YouWinScene");
         }
     }
 }

@@ -14,24 +14,24 @@ public class PlayerSound : MonoBehaviour
     public AudioClip gravityFlipClip;
 
 
-    // 你新增的音效
-    public AudioClip gameOverClip;
+	// Additional sound effects
+	public AudioClip gameOverClip;
     public AudioClip levelCompleteClip;
     public AudioClip collectItemClip;
 
 
     void Start()
     {
-        // 自动获取 audioSource（更保险）
-        if (audioSource == null)
+		// Automatically get audioSource (safer)
+		if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
         }
     }
 
-    // 各种播放函数（统一加空检查，避免播放空音频）
+	// Various play functions (with null checks to avoid playing empty clips)
 
-    public void PlayJumpSound()
+	public void PlayJumpSound()
     {
         PlayOneShotSafe(jumpClip);
     }
@@ -66,8 +66,8 @@ public class PlayerSound : MonoBehaviour
         PlayOneShotSafe(collectItemClip);
     }
 
-    // 公共播放逻辑封装
-    private void PlayOneShotSafe(AudioClip clip)
+	// Common play logic encapsulation
+	private void PlayOneShotSafe(AudioClip clip)
     {
         if (audioSource != null && clip != null)
         {
@@ -75,7 +75,7 @@ public class PlayerSound : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("音效播放失败，AudioSource 或 Clip 未设置！");
+            Debug.LogWarning("Failed to play sound effect, AudioSource or Clip not set!");
         }
     }
 }
