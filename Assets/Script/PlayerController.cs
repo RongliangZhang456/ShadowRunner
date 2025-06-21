@@ -467,7 +467,7 @@ public class PlayerController : MonoBehaviour
 #else
             if (playerSound != null) playerSound.PlaySplashSound();
             isGameOver = true;
-            Application.Quit();
+            //Application.Quit();
 #endif
         }
     }
